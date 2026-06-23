@@ -1,0 +1,1 @@
+export const QUICK_REPLY_SELECTOR = 'textarea[name="message"][id*="quick"], textarea[name="message"][id*="reply"], #quick_reply textarea, .quick_reply textarea, form[name="quick_reply"] textarea, form[action*="newreply"] textarea, textarea#vB_Editor_QR_textarea';
