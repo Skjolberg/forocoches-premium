@@ -87,7 +87,7 @@ iOS no soporta Tampermonkey directamente, pero puedes usar la extension **Usersc
 Instala [Userscripts](https://apps.apple.com/es/app/userscripts/id1463298887) desde la App Store.<br>
 Una vez instalado **Userscripts**, tienes 2 opciones para seguir con la instalación:
 #### Opción 1 (automático)
-1. Abre Safari y escribe https://greasyfork.org/en/scripts/584093-forocoches-premium
+1. Accede a este [`link`](https://update.greasyfork.org/scripts/584093/Forocoches%20Premium.user.js) desde tu navegador.
 2. Desplazate a la parte superior izquierda de tu navegador y entra en `Userscripts`
 3. Te pedirá permisos para instalar dicho script, simplemente permitelo.
 4. `Userscripts` lo detectara automaticamente y hará el resto, asegurate que esté habilitado el Script.
@@ -95,7 +95,7 @@ Una vez instalado **Userscripts**, tienes 2 opciones para seguir con la instalac
 #### Opción 2 (manual)
 1. Abre la app **Archivos** o cualquier gestor y crea una carpeta llamada `Userscripts` (por ejemplo en iCloud Drive)
 2. Abre la app Userscripts y configura la carpeta `Userscripts` como directorio de scripts
-3. Descarga [`dist/forocoches-premium.user.js`](dist/forocoches-premium.user.js) y guardalo en la anterior carpeta que has establecido como directorio para tus Scripts.
+3. Descarga [`forocoches-premium.user.js`](https://github.com/Skjolberg/forocoches-premium/releases/latest/download/forocoches-premium.user.js) y guardalo en la anterior carpeta que has establecido como directorio para tus Scripts.
 4. Una vez esté en la carpeta que has creado, Userscripts lo detectara automaticamente.
 
 Entra a `https://forocoches.com/foro/` desde Safari y el script se ejecutara.
