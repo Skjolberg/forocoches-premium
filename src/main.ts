@@ -6,7 +6,8 @@ import { syncIgnored } from './ignore-fc';
 import { getUsers } from './storage';
 import { resetAdapter } from './dom-adapter';
 
-const FCVERSION = '1.0.0';
+declare const __FC_VERSION__: string;
+const FCVERSION = __FC_VERSION__;
 const FCAUTHOR = 'IsiPalazon';
 const TELEGRAM = '@x265Always';
 

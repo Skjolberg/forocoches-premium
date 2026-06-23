@@ -104,7 +104,7 @@ export function togglePanel(): void {
 
   const footer = document.createElement('div');
   footer.style.cssText = 'padding:12px 12px 4px;text-align:center;font-size:11px;color:#777;';
-  footer.innerHTML = '<a href="https://github.com/Skjolberg/forocoches-premium" target="_blank" style="color:#FD5D4D;text-decoration:none;">GitHub</a>';
+  footer.innerHTML = '<a href="https://github.com/Skjolberg/forocoches-premium" target="_blank" style="color:#FD5D4D;text-decoration:none;">GitHub</a><br><span style="color:#777;">v' + __FC_VERSION__ + '</span>';
   panel.appendChild(footer);
 
   panelListDiv = buildUsersTab(content);
