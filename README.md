@@ -4,6 +4,8 @@
 
 **Userscript** que mejora Forocoches: Oculta hilos por usuarios ignorados y palabras clave, ignora mensajes de usuarios, poles automáticas, entre otras funciones.
 
+> **⚠️ Aviso importante:** Este proyecto es un proyecto **independiente y no oficial**. No está afiliado, asociado, autorizado, respaldado ni en modo alguno vinculado a Forocoches.com. Forocoches.com es una marca registrada de sus respectivos propietarios. Este proyecto no representa a Forocoches.com ni forma parte del mismo equipo, negocio o marca.
+
 > ⚠️ **Solo compatible con la versión móvil**. Pronto para version de PC.
 
 ---
