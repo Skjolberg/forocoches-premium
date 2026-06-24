@@ -1,5 +1,6 @@
-# FC Premium <img src="images/iconos/verified.png" width="25" alt="verified">
+# Forocoches Premium <img src="images/iconos/verified.png" width="25" alt="verified">
 
+[![Visualizaciones](https://visitor-badge.laobi.icu/badge?page_id=Skjolberg.forocoches-premium&left_text=Visualizaciones)](https://github.com/Skjolberg/forocoches-premium)
 [![GitHub Release](https://img.shields.io/github/v/release/Skjolberg/forocoches-premium?style=flat&label=version)](https://github.com/Skjolberg/forocoches-premium/releases/latest)
 
 **Userscript** que mejora Forocoches: Oculta hilos por usuarios ignorados y palabras clave, ignora mensajes de usuarios, poles automáticas, entre otras funciones.
