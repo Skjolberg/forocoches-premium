@@ -106,6 +106,22 @@ Entra a `https://forocoches.com/foro/` desde Safari y el script se ejecutara.
 
 > 💡 **Tip**: Si tienes problemas, asegurate de que la extension Userscripts este **activada** en Safari.
 
+### En Android
+
+Android soporta Tampermonkey directamente en los navegadores compatibles.
+
+#### Opción 1: Kiwi Browser (Chromium, recomendado)
+1. Instala [Kiwi Browser](https://play.google.com/store/apps/details?id=com.kiwibrowser.browser) desde Google Play
+2. Instala [Tampermonkey](https://chromewebstore.google.com/detail/tampermonkey/dhdgffkkebhmkfjojejmpbldmpobfkfo) desde Chrome Web Store
+3. Abre este [`link`](https://update.greasyfork.org/scripts/584093/Forocoches%20Premium.user.js) y toca **Instalar**
+
+#### Opción 2: Firefox Android
+1. Instala [Firefox Nightly](https://play.google.com/store/apps/details?id=org.mozilla.fenix) desde Google Play
+2. Instala [Tampermonkey](https://addons.mozilla.org/es/firefox/addon/tampermonkey/) desde Firefox Add-ons
+3. Abre este [`link`](https://update.greasyfork.org/scripts/584093/Forocoches%20Premium.user.js) y toca **Instalar**
+
+Entra a `https://forocoches.com/foro/` y el script se ejecutara
+
 ---
 
 ## ⚙️ Opciones de configuracion
