@@ -27,7 +27,7 @@ function hidePostElement(post: HTMLElement, usePlaceholder: boolean): void {
 }
 
 function findPostAuthor(post: HTMLElement): string | null {
-  const links = post.querySelectorAll<HTMLAnchorElement>('a[href*="member.php?u="]');
+  const links = post.querySelectorAll<HTMLAnchorElement>('a[href*="member.php?u="], a.bigusername[href*="member.php"]');
   for (let i = 0; i < links.length; i++) {
     const name = cleanUser(links[i].textContent);
     if (name) return name;
@@ -61,8 +61,11 @@ export function addIgnorePostButtons(): void {
   if (window.location.pathname.indexOf('showthread.php') === -1) return;
   if (getDisablePostHiding()) return;
 
-  const citarLinks = Array.from(document.querySelectorAll<HTMLAnchorElement>('a')).filter((anchor) => {
-    return (anchor.textContent || '').trim().toLowerCase() === 'citar';
+  const citarLinks = Array.from(document.querySelectorAll<HTMLAnchorElement>('a[href*="newreply.php?do=newreply"]')).filter((anchor) => {
+    if ((anchor.textContent || '').trim().toLowerCase() === 'citar') return true;
+    const img = anchor.querySelector('img');
+    if (img && (img.alt || '').toLowerCase().indexOf('cita') !== -1) return true;
+    return false;
   });
   if (citarLinks.length === 0) return;
   if (citarLinks.length !== lastCitarLinks) { lastCitarLinks = citarLinks.length; log('IGNORE-BTN', `Links "Citar": ${citarLinks.length}`); }
