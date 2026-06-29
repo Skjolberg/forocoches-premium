@@ -17,7 +17,15 @@ function handlePole(): void {
     }
     if (qr) {
       qr.value = msg;
+      qr.style.display = '';
       qr.focus();
+      const qrIframe = document.getElementById('vB_Editor_QR_iframe') as HTMLIFrameElement | null;
+      if (qrIframe) {
+        try {
+          const iframeDoc = qrIframe.contentDocument || qrIframe.contentWindow?.document;
+          if (iframeDoc) { iframeDoc.body.innerHTML = msg; }
+        } catch (_) { /* ignore cross-origin */ }
+      }
       log('POLE', `Texto rellenado: "${msg}"`);
       toast('Pole! Enviando mensaje...', 2000);
       setTimeout(() => {
