@@ -18,6 +18,10 @@ function handlePole(): void {
     if (qr) {
       qr.value = msg;
       qr.focus();
+      setTimeout(function () {
+        var target = document.getElementById('vB_Editor_QR') || document.getElementById('qrform') || qr;
+        if (target) target.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }, 100);
       const qrIframe = document.getElementById('vB_Editor_QR_iframe') as HTMLIFrameElement | null;
       if (qrIframe) {
         try {
