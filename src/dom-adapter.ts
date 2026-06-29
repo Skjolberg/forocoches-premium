@@ -488,7 +488,7 @@ function createDesktopV2Adapter(): DomAdapter {
   }
 
   function getSummaryTarget(): HTMLElement | null {
-    return document.querySelector('section.without-top-corners') || document.querySelector('div.threads-list') || document.querySelector('section') || document.querySelector('main') || document.querySelector('#threadslist') || document.body;
+    return document.querySelector('section.without-top-corners.without-bottom-corners') || document.querySelector('section.without-top-corners') || document.querySelector('div.threads-list') || document.querySelector('section') || document.querySelector('main') || document.querySelector('#threadslist') || document.body;
   }
 
   function getPostContainer(element: HTMLElement): HTMLElement | null {
