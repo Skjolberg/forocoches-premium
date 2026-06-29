@@ -17,7 +17,6 @@ function handlePole(): void {
     }
     if (qr) {
       qr.value = msg;
-      qr.style.display = '';
       qr.focus();
       const qrIframe = document.getElementById('vB_Editor_QR_iframe') as HTMLIFrameElement | null;
       if (qrIframe) {
