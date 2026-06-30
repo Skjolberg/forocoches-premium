@@ -1,5 +1,7 @@
 # FC Premium — AGENTS.md
 
+> **Regla:** Cada vez que implementes un cambio que afecte a la lógica del programa (nuevo adaptador, cambio de detección, nuevo selector, cambio en el flujo de datos), documéntalo aquí. Esto asegura que el contexto se mantenga entre sesiones.
+
 ## Project
 
 Userscript Forocoches. TS + Vite 6 + vite-plugin-monkey → single-file userscript. No runtime deps, no GM_* APIs (`grant: 'none'`). DOM + localStorage only.
@@ -47,15 +49,25 @@ No tests, no linter, no formatter.
 
 ## Feature Reference
 
-### Dual Design Support (`src/dom-adapter.ts`)
-Auto-detect legacy (section-based) vs v2 (div.threads-list / div.postbit_wrapper / div.page-margin) via DOM sniffing. Manual override in Config → Compatibilidad → Diseño del foro.
+### Triple Design Support (`src/dom-adapter.ts`)
+Auto-detect legacy (mobile v1) vs v2 (mobile v2) vs pc (desktop) via DOM sniffing. Detection order: `section.without-top-corners` (desktop-v2), `table#threadslist` (desktop-v1), `div.threads-list` / `div.postbit_wrapper` (mobile-v2), fallback mobile-v1.
 
-### v2 Adaptations
+### Mobile-v2 Adaptations
 - **threads.ts**: `findContainerV2()` walks up to child of `div.threads-list`. `extractAuthorV2()` uses `N @ username` pattern from textContent.
-- **hide-posts.ts**: `findPostAuthor()` iterates `querySelectorAll` for non-empty `textContent` (v2 has 3 member.php links, 1st empty).
-- **fc-api.ts**: Ignorelist selector `#ignorelist > li > a` → `#ignorelist a[href*="member.php"]` (v2 uses divs, not ul/li). Addlist regex: no "ignorar" text required (v2: "Agregar a Lista de Ignorados").
-- **dom-adapter.ts**: `getOPAuthor()`: v2 iterates first `div#editN` member.php links for non-empty textContent; legacy uses position-based `links[1]`.
+- **hide-posts.ts**: `findPostAuthor()` iterates `querySelectorAll` for non-empty `textContent` (mobile-v2 has 3 member.php links, 1st empty).
+- **fc-api.ts**: Ignorelist selector `#ignorelist > li > a` → `#ignorelist a[href*="member.php"]` (mobile-v2 uses divs, not ul/li). Addlist regex: no "ignorar" text required (mobile-v2: "Agregar a Lista de Ignorados").
+- **dom-adapter.ts**: `getOPAuthor()`: mobile-v2 iterates first `div#editN` member.php links for non-empty textContent; mobile-v1/desktop-v1 uses scoped `li.postbit` query.
 - **ui/index.ts**: Quick reply textarea: added `textarea#vB_Editor_QR_textarea`.
+
+### Desktop-v1 Adaptations
+- **dom-adapter.ts**: `createDesktopV1Adapter()`. Forumdisplay: `table#threadslist` wrapper, threads in `<tr>`, author via `span[onclick*="member.php?u="]` textContent, message count via `a[href*="whoposted"]` textContent. Showthread: `li.postbit` containers (same postbit structure as mobile-v1).
+- **hide-threads.ts**: `hideThreadByAuthor` enabled for desktop-v1 (has member.php links via onclick span).
+- **threads.ts**: Dedup por href base (sin fragmento `#`) + dedup por container evita duplicados por enlace "último mensaje" que contiene `showthread.php?t=N#postM`.
+
+### Desktop-v2 Adaptations
+- **dom-adapter.ts**: `createDesktopV2Adapter()`. Forumdisplay: `section.without-top-corners` wrapper, threads in `div[flex-direction:column]`, author via `@User - Actualizado...` pattern, message count via `a[href*="whoposted"]` textContent. Showthread: same logic as mobile-v2 (postbit_wrapper, member.php links, div#edit containers). Thread container detection walks up from `a#thread_title_N` until grandparent is `section.without-top-corners`.
+- **hide-threads.ts**: `hideThreadByAuthor` enabled for desktop-v2 (same reason as mobile-v2: no member.php links in thread list area).
+- **fc-api.ts**: Ignorelist selector `#ignorelist a[href*="member.php"]` already works (desktop-v2 uses `ul#ignorelist > li`, matches same selector).
 
 ### Highlight 0-Message Threads
 Config: "Resaltar hilos sin respuestas" + 7 predefined colors. Extracts `messageCount` via `N @ username` (v2) or `N Mensajes` (legacy). Paints `container.style.background`.
@@ -73,7 +85,7 @@ Floating buttons stacked vertically (bottom-right): ▲ (scroll up), ▼ (scroll
 
 ### Hilos
 - `autoMinimizeWords`: Auto-minimizar al guardar palabras
-- `hideThreadByAuthor`: Ocultar hilos por autor (v2 solo)
+- `hideThreadByAuthor`: Ocultar hilos por autor (mobile-v2, desktop-v1, desktop-v2)
 - `highlightZeroMessages`: Resaltar hilos sin respuestas
 - `highlightZeroMessagesColor`: Color de resaltado (string, default `'#FFF3CD'`)
 
@@ -105,29 +117,40 @@ Floating buttons stacked vertically (bottom-right): ▲ (scroll up), ▼ (scroll
 - History API monkey-patched (`pushState`/`replaceState`) + `popstate` for SPA nav
 - Only two page types: `forumdisplay.php` (thread list) and `showthread.php` (thread view)
 
-- v2 SEPARATOR elements empty (author info in thread container textContent, not SEPARATOR)
-- Ni legacy ni v2 tienen `section`, `main`, `article`, `nav` — todo es `div`
+- mobile-v2 SEPARATOR elements empty (author info in thread container textContent, not SEPARATOR)
+- Ni mobile-v1 ni mobile-v2 tienen `section`, `main`, `article`, `nav` — todo es `div`
+- desktop-v2 tiene `section`, `main`, `header`
 - CSS custom properties used extensively (`var(--background-color)`, `var(--coral)`, etc.)
-- v2 member.php links in post: textContent="" on 1st match, actual username on 2nd
+- mobile-v2 member.php links in post: textContent="" on 1st match, actual username on 2nd (v2 has 3 links, PC has 2, legacy has 2+)
 - Forumdisplay v2: thread creator after `@` in `"N @ username"` pattern in container textContent
 - Legacy forumdisplay: thread info (messages, author) in `<li>` sibling of container `<li>`
+- PC forumdisplay: thread creator after `@` in `"@User - Actualizado..."` pattern in span textContent
+- PC showthread: div#edit{N} wraps section > div.postbit_wrapper (not same element like v2)
 
 ## DOM Reference Files
 
-Full HTML snapshots (sanitized with fake placeholder data) in `dom/v1/` (legacy) and `dom/v2/` (new mobile design).
+Full HTML snapshots (sanitized with fake placeholder data) in `dom/mobile/v1/` (legacy mobile), `dom/mobile/v2/` (new mobile), `dom/desktop/v1/` (legacy PC), and `dom/desktop/v2/` (new PC design).
 Real user IDs replaced with `999xxx` range, usernames with `FakeUserNN`, post IDs with `999000xxx`, thread IDs with `880000xx`.
 Use alongside the structure docs below for full context when implementing features.
 
 | File | Page Type |
 |------|-----------|
-| `dom/v1/forumdisplay.html` | Legacy thread list |
-| `dom/v1/showthread.html` | Legacy thread view |
-| `dom/v1/ignore_list.html` | Legacy ignore list |
-| `dom/v1/member.html` | Legacy user profile |
-| `dom/v2/forumdisplay.html` | v2 mobile thread list |
-| `dom/v2/showthread.html` | v2 mobile thread view |
-| `dom/v2/ignore_list.html` | v2 mobile ignore list |
-| `dom/v2/member.html` | v2 mobile user profile (other user) |
+| `dom/mobile/v1/forumdisplay.html` | Legacy mobile thread list |
+| `dom/mobile/v1/showthread.html` | Legacy mobile thread view |
+| `dom/mobile/v1/ignore_list.html` | Legacy mobile ignore list |
+| `dom/mobile/v1/member.html` | Legacy mobile user profile |
+| `dom/mobile/v2/forumdisplay.html` | v2 mobile thread list |
+| `dom/mobile/v2/showthread.html` | v2 mobile thread view |
+| `dom/mobile/v2/ignore_list.html` | v2 mobile ignore list |
+| `dom/mobile/v2/member.html` | v2 mobile user profile |
+| `dom/desktop/v1/forumdisplay.html` | Legacy PC thread list |
+| `dom/desktop/v1/showthread.html` | Legacy PC thread view |
+| `dom/desktop/v1/ignore_list.html` | Legacy PC ignore list |
+| `dom/desktop/v1/member.html` | Legacy PC user profile |
+| `dom/desktop/v2/forumdisplay.html` | PC desktop thread list |
+| `dom/desktop/v2/showthread.html` | PC desktop thread view |
+| `dom/desktop/v2/ignore_list.html` | PC desktop ignore list |
+| `dom/desktop/v2/member.html` | PC desktop user profile |
 
 ## DOM Structure (v2 mobile)
 
@@ -199,23 +222,90 @@ Selectors:
   - Submit form: form.closest('form').querySelector input[type="submit"] where value contains "enviar"
 ```
 
+## DOM Structure (PC desktop v2)
+
+### forumdisplay.php (thread list)
+
+```
+section.without-top-corners.without-bottom-corners
+  └─ div[style*="flex-direction: column"]                          ← THREAD LIST WRAPPER
+       ├─ div[style*="flex-direction: column"]                     ← THREAD CONTAINER (to hide)
+       │    └─ div[style*="flex-direction: row; padding-left: 24px"]
+       │         ├─ span[icon]                                     ← message icon
+       │         ├─ separator-vertical
+       │         ├─ div[flex: 7; flex-direction: column]           ← title + metadata
+       │         │    ├─ span[font-size: 1rem]
+       │         │    │    └─ a#thread_title_N[href*="showthread.php?t="]
+       │         │    │         └─ span > span[font-weight: bold]  ← TITLE TEXT
+       │         │    └─ div[flex-direction: row]
+       │         │         └─ a[href*="showthread.php?p="]
+       │         │              └─ span "@Username - Actualizado..." ← CREATOR
+       │         ├─ separator-vertical
+       │         └─ div[flex-direction: row]
+       │              ├─ span[icon]                                ← replies icon
+       │              └─ a[href*="misc.php?do=whoposted"] "12"     ← MESSAGE COUNT
+       └─ <separator style="height: 4px">                          ← between threads
+
+Selectors:
+  - Thread link: a[id^="thread_title_"] or a[href*="showthread.php?t="]
+  - Container: walk up from a#thread_title_N until grandparent is section.without-top-corners
+  - Creator: textContent.match(/@(\S+?)\s*-\s*(Actualizado|Ayer|Hoy|Anteayer)/i) → group 1
+  - Message count: a[href*="whoposted"] textContent (parseInt)
+  - No member.php links exist in thread list area (PC)
+```
+
+### showthread.php (thread view)
+
+```
+main > div#container
+  └─ div#posts
+       ├─ div#edit{N}                                              ← OUTER post wrapper
+       │    └─ section.without-bottom-corners
+       │         └─ div#post{N}.postbit_wrapper                    ← INNER post container
+       │              ├─ div (header: avatar + username + date)
+       │              │    ├─ a[href*="member.php?u="] > img       ← avatar (textContent "")
+       │              │    ├─ a[href*="member.php?u="] "Username"  ← real username
+       │              │    └─ span (date, post number)
+       │              ├─ <separator>
+       │              ├─ div#post_message_N (message content)
+       │              └─ div (control bar)
+       │                   ├─ a "Citar"                            ← "Citar" in <span> inside <a>
+       │                   │    href="newreply.php?do=newreply&p=N"
+       │                   │    → parent walk up to div#edit{N} (depth 5)
+       │                   └─ ... (report, reply, multi-cite)
+       ├─ <separator-large>
+       ├─ div#edit{N+1} ... (next post)
+       └─ form#qrform[action*="newreply.php?do=postreply"]
+            └─ textarea#vB_Editor_QR_textarea[name="message"]      ← quick reply (with placeholder)
+
+Selectors:
+  - Post containers: div[id^="edit"] (outer), div.postbit_wrapper (inner)
+  - Author link: a[href*="member.php?u="] (use *= not ^=)
+  - Find author: querySelectorAll + filter for non-empty textContent (2 links per post: avatar empty, username real)
+  - Citar: a containing span with text "Citar" (case insensitive, works via a.textContent)
+  - Quick reply: textarea#vB_Editor_QR_textarea[name="message"]
+  - Submit form: input#qr_submit[type="submit"] (value="Enviar Respuesta")
+```
+
 ### profile.php?do=ignorelist (ignore list)
 
 ```
 div.page-margin > div.page > div.block
   └─ div#ignorelist                                                ← DIV, not UL!
-       ├─ div#user{N}                                              ← each user entry
+       ├─ div#user{N}                                              ← each user entry (mobile v2)
        │    ├─ input[type="checkbox"][name="listbits[ignore][N]"]  ← checkbox
        │    ├─ a[href="member.php?u=N"] "username"                 ← user link
        │    ├─ input[type="hidden"]                                ← original value
        │    └─ <separator style="margin-top: 16px">                ← separator
        └─ ...
 
-Selectors:
-  - User list: #ignorelist a[href*="member.php"]  (NOT #ignorelist > li > a)
-  - User ID: href.match(/member\.php\?u=(\d+)/)
-  - Structure: div entries, not li entries
+PC/legacy uses ul#ignorelist with li children (same #ignorelist a[href*="member.php"] selector works for both).
 ```
+
+Selectors:
+  - User list: #ignorelist a[href*="member.php"]  (works on all: ul/li and div/div)
+  - User ID: href.match(/member\.php\?u=(\d+)/)
+  - Structure: div entries (mobile v2), li entries (legacy, PC)
 
 ### member.php (other user's profile)
 
@@ -243,29 +333,31 @@ Selectors:
 ### Theme detection
 
 ```ts
-function detectTheme(): 'legacy' | 'v2' {
-  if (document.querySelector('div.threads-list, div.postbit_wrapper, separator'))
-    return 'v2';
-  return 'legacy';
+function detectTheme(): 'mobile-v1' | 'mobile-v2' | 'desktop-v1' | 'desktop-v2' {
+  if (document.querySelector('section.without-top-corners')) return 'desktop-v2';
+  if (document.querySelector('table#threadslist')) return 'desktop-v1';
+  if (document.querySelector('div.threads-list, div.postbit_wrapper')) return 'mobile-v2';
+  return 'mobile-v1';
 }
 ```
 
-Selectors: `div.threads-list` (v2 forumdisplay), `div.postbit_wrapper` (v2 showthread), `separator` (v2 ambas). Ninguno existe en legacy.
+Selectors: `section.without-top-corners` (desktop-v2 forumdisplay), `table#threadslist` (desktop-v1 forumdisplay), `div.threads-list` (mobile-v2 forumdisplay), `div.postbit_wrapper` (mobile-v2 showthread).
 
 ### Theme visual differences
 
-| Feature | Legacy | v2 mobile |
-|---------|--------|-----------|
-| Layout tags | All `<div>` (no semánticos) | All `<div>` (no semánticos) |
-| Body classes | Empty `class=""` | Empty `class=""` |
-| HTML classes | Empty `class=""` | Empty `class=""` |
-| CSS custom props | Hardcoded colors | `var(--coral)`, `var(--text-color)`, `var(--background-color)` |
-| Thread list container | Bare `<ul>` | `div.threads-list` |
-| Post container | `li.postbit` | `div#edit{N}.postbit_wrapper` wrapping `<li>` |
-| SEPARATOR element | `<hr>` or border | `<separator></separator>` (custom empty element) |
-| Author in forumdisplay | `<div class="asmvinfo"> textContent` | `"N @ username"` in textContent |
-| member.php href format | Relative `member.php?u=N` | Absolute `https://.../member.php?u=N` |
-| Ignore list structure | `<ul id="ignorelist"><li>...</li></ul>` | `<div id="ignorelist"><div>...</div></div>` |
-| Link "Ignorar" text | "Ignorar" | "Agregar a Lista de Ignorados" |
-| OP detection | Second non-empty member.php link | First post's member.php author |
-| Quick reply textarea | `textarea[name="message"][id*="quick"]` | `textarea#vB_Editor_QR_textarea` |
+| Feature | Mobile-v1 | Mobile-v2 | Desktop-v1 | Desktop-v2 |
+|---------|-----------|-----------|------------|------------|
+| Layout tags | All `<div>` (no semánticos) | All `<div>` (no semánticos) | All `<div>` (no semánticos) | `<section>`, `<main>`, `<header>` |
+| Body classes | Empty `class=""` | Empty `class=""` | Empty `class=""` | Empty `class=""` |
+| CSS custom props | Hardcoded colors | `var(--coral)`, `var(--text-color)`, `var(--background-color)` | Hardcoded colors | `var(--coral)`, `var(--text-color)`, `var(--background-color)` |
+| Thread list container | Bare `<ul>` | `div.threads-list` | `table#threadslist` | `section.without-top-corners` |
+| Thread container | `<li>` | `div` child of threads-list | `<tr>` | `div[style*="flex-direction: column"]` child of wrapper |
+| Post container | `li.postbit` | `div#edit{N}.postbit_wrapper` wrapping `<li>` | `li.postbit` (table layout) | `div#edit{N} > section > div#post{N}.postbit_wrapper` (no `<li>`) |
+| SEPARATOR element | `<hr>` or border | `<separator></separator>` (custom empty element) | None (alt1/alt2 bg) | `<separator>` + `<separator-vertical>` |
+| Author in forumdisplay | `<div class="asmvinfo"> textContent` | `"N @ username"` in textContent | `span[onclick*="member.php?u="]` | `"@User - Actualizado..."` in textContent |
+| Message count in list | `"N Mensajes"` text | `N` from `"N @ username"` pattern | `a[href*="whoposted"]` textContent | `a[href*="whoposted"]` textContent |
+| member.php href format | Relative `member.php?u=N` | Absolute `https://.../member.php?u=N` | Via onclick span | Relative `member.php?u=N` |
+| Ignore list structure | `<ul id="ignorelist"><li>...</li></ul>` | `<div id="ignorelist"><div>...</div></div>` | `<ul id="ignorelist"><li>...</li></ul>` | `<ul id="ignorelist"><li>...</li></ul>` |
+| Link "Ignorar" text | "Ignorar" | "Agregar a Lista de Ignorados" | "Agregar a Lista de Ignorados" | "Agregar a Lista de Ignorados" |
+| OP detection | Scoped `li.postbit` member.php | First post member.php author | Scoped `li.postbit` member.php | First post member.php author |
+| Quick reply textarea | `textarea[name="message"][id*="quick"]` | `textarea#vB_Editor_QR_textarea` | `textarea#vB_Editor_QR_textarea` | `textarea#vB_Editor_QR_textarea` (with placeholder) |

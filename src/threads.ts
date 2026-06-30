@@ -13,18 +13,24 @@ function extractTitle(anchor: HTMLAnchorElement): string {
 export function findThreads(): ThreadInfo[] {
   const ad = detectAdapter();
   const results: ThreadInfo[] = [];
-  const seen = new Set<string>();
+  const seenHref = new Set<string>();
+  const seenContainer = new Set<HTMLElement>();
 
   const allLinks = document.querySelectorAll<HTMLAnchorElement>('a[href*="showthread.php?t="], a[id^="thread_title_"]');
   log('THREADS', `Enlaces encontrados: ${allLinks.length}`);
   allLinks.forEach(function (anchor) {
-    if (seen.has(anchor.href)) return;
-    seen.add(anchor.href);
+    const hrefKey = anchor.href.replace(/#.*$/, '');
+    if (seenHref.has(hrefKey)) return;
+    seenHref.add(hrefKey);
+
+    const title = extractTitle(anchor);
+    if (!title) return;
 
     const container = ad.getThreadContainer(anchor);
     if (!container) return;
+    if (seenContainer.has(container)) return;
+    seenContainer.add(container);
 
-    const title = extractTitle(anchor);
     const extraContainer = ad.getExtraContainer(container);
     const messageCount = ad.getMessageCount(container, extraContainer);
     const author = ad.getThreadAuthor(container, extraContainer, title);

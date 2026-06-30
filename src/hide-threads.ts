@@ -76,8 +76,8 @@ export function hideThreads(users: string[], words: string[]): void {
 
     let reason = '';
 
-    // 1) By author (only in v2 when config enabled)
-    if (users.length > 0 && thread.author && ad.theme === 'v2' && hideByAuthor) {
+    // 1) By author (mobile-v2, desktop-v1, desktop-v2 when config enabled)
+    if (users.length > 0 && thread.author && (ad.theme === 'mobile-v2' || ad.theme === 'desktop-v1' || ad.theme === 'desktop-v2') && hideByAuthor) {
       if (users.indexOf(thread.author) !== -1) reason = '@' + thread.author;
     }
 
@@ -118,6 +118,7 @@ export function hideThreads(users: string[], words: string[]): void {
       if (!thread.container) return;
       if (thread.messageCount === 0) {
         thread.container.style.background = hzColor;
+        thread.container.querySelectorAll<HTMLElement>('td').forEach(function (td) { td.style.background = hzColor; });
       }
     });
   }
