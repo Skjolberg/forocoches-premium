@@ -213,9 +213,6 @@ src/
 
 ## 📋 TODO
 
-### Eliminar publicidad y elementos molestos
-- Eliminar bloques de publicidad, contenedores vacíos y cualquier elemento molesto o que distraiga
-
 ### Notas por usuario
 - Poder añadir **notas personalizadas** a cada usuario desde:
   - El listado de un hilo (junto al nombre del autor)
