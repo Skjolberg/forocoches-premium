@@ -5,7 +5,7 @@ import { getConfig, saveConfig } from './storage';
 //  GENERIC CONFIG FIELDS
 // ============================================================
 
-export type ConfigKey = 'autoMinimize' | 'autoMinimizeWords' | 'autoRedirectOP' | 'autoReloadIgnore' | 'showScrollUp' | 'showScrollDown' | 'showPlaceholder' | 'disablePostHiding' | 'hideThreadByAuthor' | 'highlightZeroMessages' | 'showPoleButton' | 'poleSearchPages';
+export type ConfigKey = 'autoMinimize' | 'autoMinimizeWords' | 'autoRedirectOP' | 'autoReloadIgnore' | 'showScrollUp' | 'showScrollDown' | 'showPlaceholder' | 'disablePostHiding' | 'hideThreadByAuthor' | 'highlightZeroMessages' | 'showPoleButton' | 'poleSearchPages' | 'blockAds' | 'hideNotices';
 
 const DEFAULTS: Record<ConfigKey, boolean> = {
   autoMinimize: true,
@@ -20,6 +20,8 @@ const DEFAULTS: Record<ConfigKey, boolean> = {
   highlightZeroMessages: true,
   showPoleButton: true,
   poleSearchPages: true,
+  blockAds: true,
+  hideNotices: true,
 };
 
 const LABELS: Record<ConfigKey, string> = {
@@ -35,6 +37,8 @@ const LABELS: Record<ConfigKey, string> = {
   highlightZeroMessages: 'Resaltar hilos sin respuestas',
   showPoleButton: 'Bot\u00F3n Pole',
   poleSearchPages: 'Buscar en p\u00E1ginas siguientes',
+  blockAds: 'Bloquear publicidad',
+  hideNotices: 'Ocultar avisos',
 };
 
 function getConfigField(key: ConfigKey): boolean {
@@ -99,6 +103,11 @@ export function setShowPoleButton(v: boolean): void { setConfigField('showPoleBu
 
 export function getPoleSearchPages(): boolean { return getConfigField('poleSearchPages'); }
 export function setPoleSearchPages(v: boolean): void { setConfigField('poleSearchPages', v); }
+
+export function getBlockAds(): boolean { return getConfigField('blockAds'); }
+export function setBlockAds(v: boolean): void { setConfigField('blockAds', v); }
+export function getHideNotices(): boolean { return getConfigField('hideNotices'); }
+export function setHideNotices(v: boolean): void { setConfigField('hideNotices', v); }
 
 export function getDebugMode(): boolean { return true; }
 

@@ -145,10 +145,15 @@ export function buildUI(): void {
     log('UI', 'Scroll DOWN');
     const qr = document.querySelector<HTMLTextAreaElement>(QUICK_REPLY_SELECTOR);
     if (qr) {
-      log('UI', 'Encontrada caja de texto, scrolleando...');
       const top = qr.getBoundingClientRect().top + window.scrollY - 20;
-      window.scrollTo({ top, behavior: 'smooth' });
-      setTimeout(() => { qr.focus(); }, 400);
+      if (top <= window.scrollY) {
+        log('UI', 'Caja por encima del viewport, yendo al final');
+        window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
+      } else {
+        log('UI', 'Encontrada caja de texto, scrolleando...');
+        window.scrollTo({ top, behavior: 'smooth' });
+        setTimeout(() => { qr.focus(); }, 400);
+      }
     } else {
       log('UI', 'Sin caja de texto, yendo al final');
       window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });

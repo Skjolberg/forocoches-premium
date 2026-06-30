@@ -46,6 +46,8 @@ export interface FCConfig {
   showPoleButton?: boolean;
   poleMessage?: string;
   poleSearchPages?: boolean;
+  blockAds?: boolean;
+  hideNotices?: boolean;
 }
 
 export function getConfig(): FCConfig {
