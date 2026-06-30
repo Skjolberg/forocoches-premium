@@ -213,9 +213,6 @@ src/
 
 ## 📋 TODO
 
-### Versión para PC
-- Adaptar el script al diseño de escritorio de Forocoches
-
 ### Eliminar publicidad y elementos molestos
 - Eliminar bloques de publicidad, contenedores vacíos y cualquier elemento molesto o que distraiga
 
