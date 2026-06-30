@@ -33,6 +33,7 @@ No tests, no linter, no formatter.
 | `src/threads.ts` | Thread extraction: containers, authors, messageCount (legacy + v2) |
 | `src/hide-threads.ts` | Hide threads + highlight 0-msg threads + safeguard |
 | `src/hide-posts.ts` | Hide posts + inject Ignore buttons in showthread |
+| `src/hide-ads.ts` | Ad blocking: CSS injection + DOM removal per theme |
 | `src/ignore-fc.ts` | Sync/ignore via FC web scraping |
 | `src/fc-api.ts` | FC API helpers (ignorelist fetch, profile, forms) |
 | `src/observer.ts` | MutationObserver for dynamic DOM |
@@ -81,6 +82,27 @@ In Users tab, filters ignore list to show only searched username (with remove X)
 ### Button Layout
 Floating buttons stacked vertically (bottom-right): ▲ (scroll up), ▼ (scroll down), 🏎️ (Pole), FC icon (toggle panel). Each hides individually via config.
 
+### Ad Blocking (`src/hide-ads.ts`)
+Dual approach: CSS injection + DOM removal. Works across all 4 themes.
+
+**CSS injection** (via `<style id="fcp-adblock">`):
+- `[id^="optidigital-adslot-"]` / `.optidigital-wrapper-div` — optidigital ad containers
+- `.float_banner`, `.ad-center` — floating bottom banners
+- `#infocookie` — cookie notice bar
+- `iframe[name="googlefcPresent"]`, `iframe[name="__tcfapiLocator"]` — consent iframes
+- `#sd-cmp` — consent management UI
+- `form#vbnotices` / `#notices-container`, `.notices-container` — notice banners
+
+**DOM removal** (for elements that leave empty containers when only hidden):
+- `iframe#h1[name="h1"]` — mobile showthread header promo
+- `iframe#fcthread[name="fcthread"]` — mobile showthread in-post ads
+- Ad `<li>` inside thread list `<ul>` (optidigital slots)
+- `#optidigital-adslot-Skyscraper_1` — desktop v1 sidebar ad
+- `#notices-container`, `.notices-container` — desktop v2 notice area
+
+Config: `blockAds` (bool, default true), `hideNotices` (bool, default true).
+Called from `runner.ts` → `run()` on every page load and mutation.
+
 ## Config Options
 
 ### Hilos
@@ -104,6 +126,10 @@ Floating buttons stacked vertically (bottom-right): ▲ (scroll up), ▼ (scroll
 - `showPoleButton`: Botón Pole
 - `poleMessage`: Texto a enviar
 - `poleSearchPages`: Buscar en páginas siguientes (hasta 35)
+
+### Publicidad
+- `blockAds`: Bloquear publicidad (optidigital, banners, flotantes)
+- `hideNotices`: Ocultar avisos (noticias, promociones, cookies)
 
 ### Compatibilidad
 - `theme`: 'auto' | 'legacy' | 'v2'

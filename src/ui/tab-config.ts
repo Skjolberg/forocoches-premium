@@ -14,6 +14,8 @@ import {
   getShowPoleButton, setShowPoleButton,
   getPoleSearchPages, setPoleSearchPages,
   getPoleMessage, setPoleMessage,
+  getBlockAds, setBlockAds,
+  getHideNotices, setHideNotices,
 } from '../config';
 import { exportData, importData } from '../storage';
 import { STYLE } from './styles';
@@ -128,6 +130,11 @@ export function buildConfigTab(content: HTMLElement): void {
   addOption(content, 'Auto-minimizar al añadir/eliminar usuarios', 'Al añadir o eliminar un usuario, el panel se cierra solo.', getAutoMinimize, setAutoMinimize);
   addOption(content, 'Redirigir al subforo al ignorar OP', 'Al ignorar al OP, vuelve al listado del subforo.', getAutoRedirectOP, setAutoRedirectOP);
   addOption(content, 'Recargar pagina al ignorar', 'Al ignorar un usuario desde un hilo, recarga la pagina.', getAutoReloadIgnore, setAutoReloadIgnore);
+
+  // ---- PUBLICIDAD ----
+  addSectionHeader(content, 'Publicidad');
+  addOption(content, 'Bloquear publicidad', 'Elimina banners y anuncios de la pagina (optidigital, skyscraper, flotantes, etc.).', getBlockAds, setBlockAds);
+  addOption(content, 'Ocultar avisos', 'Oculta los mensajes de aviso del foro (noticias, promociones, cookies).', getHideNotices, setHideNotices);
 
   // ---- INTERFAZ ----
   addSectionHeader(content, 'Interfaz');

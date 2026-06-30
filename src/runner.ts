@@ -2,6 +2,7 @@ import { log, toast } from './toast';
 import { getUsers, getWords } from './storage';
 import { hideThreads } from './hide-threads';
 import { hidePosts, addIgnorePostButtons } from './hide-posts';
+import { hideAds } from './hide-ads';
 import { findThreads } from './threads';
 import { QUICK_REPLY_SELECTOR } from './selectors';
 let lastLogKey = '';
@@ -96,6 +97,7 @@ function handlePoleSearch(): void {
 }
 
 export function run(): void {
+  hideAds();
   const users = getUsers();
   const words = getWords();
   const path = window.location.pathname;
