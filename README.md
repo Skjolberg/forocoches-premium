@@ -3,11 +3,9 @@
 [![Visualizaciones](https://visitor-badge.laobi.icu/badge?page_id=Skjolberg.forocoches-premium&left_text=Visualizaciones)](https://github.com/Skjolberg/forocoches-premium)
 [![GitHub Release](https://img.shields.io/github/v/release/Skjolberg/forocoches-premium?style=flat&label=version)](https://github.com/Skjolberg/forocoches-premium/releases/latest)
 
-**Userscript** que mejora Forocoches: Oculta hilos por usuarios ignorados y palabras clave, ignora mensajes de usuarios, poles automáticas, entre otras funciones.
+**Userscript** que mejora Forocoches: Oculta hilos por usuarios ignorados y palabras clave, ignora mensajes de usuarios, poles automáticas, bloquea toda la publicidad, entre otras funciones. Compatible con **móvil y PC** (todos los diseños).
 
 > **⚠️ Aviso importante:** Este proyecto es un proyecto **independiente y no oficial**. No está afiliado, asociado, autorizado, respaldado ni en modo alguno vinculado a Forocoches.com. Forocoches.com es una marca registrada de sus respectivos propietarios. Este proyecto no representa a Forocoches.com ni forma parte del mismo equipo, negocio o marca.
-
-> ⚠️ **Solo compatible con la versión móvil**. Pronto para version de PC.
 
 ---
 
@@ -61,12 +59,20 @@
 - ▼ **Bajar abajo** — scroll a la caja de comentarios (o al final de pagina)
 - Cada boton se oculta individualmente desde configuracion
 
+### Eliminar publicidad y elementos molestos
+- Bloquea **toda la publicidad** (optidigital, banners flotantes, skyscraper)
+- Elimina avisos, noticias promocionadas y barra de cookies (`#infocookie`, `#vbnotices`)
+- Elimina contenedores vacíos y placeholders de anuncios que distraen
+- Elimina el botón nativo de "subir" para no duplicar funcionalidad
+- Funciona en **todos los diseños**: móvil clásico, móvil nuevo, PC clásico y PC nuevo
+- Configurable desde el panel (activar/desactivar por separado publicidad y avisos)
+
 ### Integracion con Forocoches real
 - Sincroniza la lista de ignorados de FC
 - Anade/elimina usuarios directamente
 
-### Soporte dual legacy / v2
-- Auto-detección de diseño (Clásico vs Nuevo)
+### Soporte multiplataforma
+- **4 diseños** detectados automáticamente: móvil clásico, móvil nuevo, PC clásico y PC nuevo
 - Adaptadores especificos para cada diseño (post containers, selectores, extraccion de datos)
 
 ### Exportar / Importar configuracion
@@ -142,6 +148,8 @@ Entra a `https://forocoches.com/foro/` y el script se ejecutara
 | Botón Pole | ✅ ON | Muestra el boton 🏎️ para pole automatica |
 | Mensaje para Pole | "Pole" | Texto a enviar en la pole (puedes poner incluso un gif o cualquier cosa) |
 | Buscar en páginas siguientes | ✅ ON | Busca en paginas siguientes si no hay hilos sin respuestas (hasta 35) |
+| Bloquear publicidad | ✅ ON | Elimina banners y anuncios (optidigital, flotantes, skyscraper) |
+| Ocultar avisos | ✅ ON | Oculta mensajes de aviso, noticias promocionadas y cookies |
 
 ---
 
@@ -193,6 +201,7 @@ src/
 ├── threads.ts        # Parseo de DOM para extraer hilos
 ├── hide-threads.ts   # Ocultar hilos en forumdisplay
 ├── hide-posts.ts     # Ocultar posts + botones Ignorar
+├── hide-ads.ts       # Bloqueo de publicidad y elementos molestos
 ├── ignore-fc.ts      # Integracion con FC (scrape + POST)
 ├── fc-api.ts         # Helpers para API de FC
 ├── observer.ts       # MutationObserver
