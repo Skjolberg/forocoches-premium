@@ -37,6 +37,14 @@
 
 ![](images/foro/ignorar.png)
 
+### Notas de usuarios
+- Añade una **nota privada** a cualquier usuario desde sus mensajes (icono ✏️/📝 junto a "Denunciar")
+- La nota se guarda en localStorage y se muestra en el **perfil del usuario** (`member.php`)
+- Desde el perfil puedes ver, editar o eliminar la nota
+
+![](images/foro/notas.png)
+![](images/foro/notas2.png)
+
 ### Botón Pole (🏎️)
 - Busca automaticamente el primer hilo sin respuestas en la pagina actual
 - Si no encuentra, busca en paginas siguientes (hasta 35 paginas)
@@ -108,8 +116,6 @@ Una vez instalado **Userscripts**, tienes 2 opciones para seguir con la instalac
 3. Descarga [`forocoches-premium.user.js`](https://github.com/Skjolberg/forocoches-premium/releases/latest/download/forocoches-premium.user.js) y guardalo en la anterior carpeta que has establecido como directorio para tus Scripts.
 4. Una vez esté en la carpeta que has creado, Userscripts lo detectara automaticamente.
 
-Entra a `https://forocoches.com/foro/` desde Safari y el script se ejecutara.
-
 > 💡 **Tip**: Si tienes problemas, asegurate de que la extension Userscripts este **activada** en Safari.
 
 ### En Android
@@ -126,7 +132,10 @@ Android soporta Tampermonkey directamente en los navegadores compatibles.
 2. Instala [Tampermonkey](https://addons.mozilla.org/es/firefox/addon/tampermonkey/) desde Firefox Add-ons
 3. Abre este [`link`](https://update.greasyfork.org/scripts/584093/Forocoches%20Premium.user.js) y toca **Instalar**
 
-Entra a `https://forocoches.com/foro/` y el script se ejecutara
+### En PC (Windows, macOS, Linux)
+
+1. Instala la extensión [Tampermonkey](https://www.tampermonkey.net/) (Chrome, Edge, Opera, Brave) o [Greasemonkey](https://www.greasespot.net/) (Firefox)
+2. Abre este [`link`](https://update.greasyfork.org/scripts/584093/Forocoches%20Premium.user.js) y pulsa **Instalar**
 
 ---
 
