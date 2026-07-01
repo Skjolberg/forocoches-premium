@@ -92,6 +92,11 @@ export function addIgnorePostButtons(): void {
     btn.textContent = 'Ignorar';
     btn.href = '#';
     btn.style.cssText = STYLE.IGNORE_BTN;
+    const isDesktopV1 = !document.querySelector('div.page-margin') && !document.querySelector('section.without-bottom-corners');
+    const isMobileV2 = !!document.querySelector('div.page-margin') && !!document.querySelector('div.postbit_wrapper');
+    const isDesktopV2 = !!document.querySelector('section.without-bottom-corners');
+    if (isDesktopV1) { btn.style.display = 'inline-block'; btn.style.marginTop = '-12px'; btn.style.setProperty('vertical-align', 'middle', 'important'); }
+    if (isMobileV2 || isDesktopV2) btn.style.marginTop = '2px';
 
     btn.addEventListener('click', (event) => {
       event.preventDefault();
@@ -122,8 +127,14 @@ export function addIgnorePostButtons(): void {
       }
     });
 
-    const separator = document.createTextNode('|');
-    citarLink.parentNode!.appendChild(separator);
+    const sepEl = isDesktopV1 ? document.createElement('span') : document.createTextNode('|');
+    if (isDesktopV1) {
+      (sepEl as HTMLSpanElement).textContent = ' | ';
+      (sepEl as HTMLSpanElement).style.display = 'inline-block';
+      (sepEl as HTMLSpanElement).style.marginTop = '-12px';
+      (sepEl as HTMLSpanElement).style.setProperty('vertical-align', 'middle', 'important');
+    }
+    citarLink.parentNode!.appendChild(sepEl);
     citarLink.parentNode!.appendChild(btn);
     added++;
   });

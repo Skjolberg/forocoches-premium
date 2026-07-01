@@ -12,6 +12,21 @@ import { findThreads } from '../threads';
 import { QUICK_REPLY_SELECTOR } from '../selectors';
 import { STYLE, COLORS } from './styles';
 
+function smoothScroll(targetY: number): void {
+  const startY = window.scrollY;
+  const dist = targetY - startY;
+  if (Math.abs(dist) < 10) { window.scrollTo(0, targetY); return; }
+  const duration = Math.max(300, Math.min(800, Math.abs(dist) * 0.3));
+  const start = performance.now();
+  function step(now: number) {
+    const t = Math.min((now - start) / duration, 1);
+    const ease = t < 0.5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2;
+    window.scrollTo(0, startY + dist * ease);
+    if (t < 1) requestAnimationFrame(step);
+  }
+  requestAnimationFrame(step);
+}
+
 // ============================================================
 //  GLOBAL STATE
 // ============================================================
@@ -129,7 +144,7 @@ export function buildUI(): void {
   upBtn.title = 'Subir arriba';
   upBtn.style.cssText = STYLE.FLOAT_BTN;
   upBtn.textContent = '\u25B2';
-  upBtn.addEventListener('click', () => { log('UI', 'Scroll UP'); window.scrollTo({ top: 0, behavior: 'smooth' }); });
+  upBtn.addEventListener('click', () => { log('UI', 'Scroll UP'); smoothScroll(0); });
   upBtn.addEventListener('mouseenter', () => { upBtn.style.background = COLORS.PRIMARY; upBtn.style.borderColor = COLORS.PRIMARY; });
   upBtn.addEventListener('mouseleave', () => { upBtn.style.background = COLORS.DARK_BG; upBtn.style.borderColor = COLORS.DARK_BG; });
   if (!getShowScrollUp()) { upBtn.style.display = 'none'; }
@@ -143,20 +158,23 @@ export function buildUI(): void {
   downBtn.textContent = '\u25BC';
   downBtn.addEventListener('click', () => {
     log('UI', 'Scroll DOWN');
-    const qr = document.querySelector<HTMLTextAreaElement>(QUICK_REPLY_SELECTOR);
+    let targetY: number | null = null;
+    const qr = document.querySelector<HTMLTextAreaElement>(QUICK_REPLY_SELECTOR) || document.querySelector<HTMLTextAreaElement>('textarea[name="message"]');
     if (qr) {
-      const top = qr.getBoundingClientRect().top + window.scrollY - 20;
-      if (top <= window.scrollY) {
-        log('UI', 'Caja por encima del viewport, yendo al final');
-        window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
+      targetY = qr.getBoundingClientRect().top + window.scrollY - 20;
+    }
+    if (!targetY || targetY <= window.scrollY) {
+      const allPosts = document.querySelectorAll<HTMLElement>('div[id^="edit"], li.postbit');
+      const lastPost = allPosts.length > 0 ? allPosts[allPosts.length - 1] : null;
+      if (lastPost) {
+        targetY = lastPost.getBoundingClientRect().bottom + window.scrollY + 20;
       } else {
-        log('UI', 'Encontrada caja de texto, scrolleando...');
-        window.scrollTo({ top, behavior: 'smooth' });
-        setTimeout(() => { qr.focus(); }, 400);
+        targetY = document.body.scrollHeight;
       }
-    } else {
-      log('UI', 'Sin caja de texto, yendo al final');
-      window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
+    }
+    if (targetY > window.scrollY) {
+      smoothScroll(targetY);
+      if (qr) setTimeout(() => { qr.focus(); }, 600);
     }
   });
   downBtn.addEventListener('mouseenter', () => { downBtn.style.background = COLORS.PRIMARY; downBtn.style.borderColor = COLORS.PRIMARY; });
