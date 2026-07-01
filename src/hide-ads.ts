@@ -9,7 +9,6 @@ function getAdCSS(): string {
 .optidigital-wrapper-div, .optidigital-text-ads { display: none !important; }
 .optidigital-brand, .optidigital-brand-logo { display: none !important; }
 .float_banner, .ad-center { display: none !important; }
-#infocookie { display: none !important; }
 iframe[name="googlefcPresent"] { display: none !important; }
 iframe[name="__tcfapiLocator"], iframe[name="__sdcmpapiLocator"] { display: none !important; }
 #sd-cmp { display: none !important; }
