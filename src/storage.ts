@@ -30,6 +30,7 @@ export function saveWords(list: string[]): void {
 }
 
 const KEY_CONFIG = 'fc_config';
+const KEY_USER_NOTES = 'fc_user_notes';
 
 export interface FCConfig {
   autoMinimize?: boolean;
@@ -68,6 +69,7 @@ export function exportData(): string {
   data[KEY_CONFIG] = getConfig();
   data[KEY_WORDS] = getWords();
   data[KEY_USERS] = getUsers();
+  try { const raw = localStorage.getItem(KEY_USER_NOTES); if (raw) data[KEY_USER_NOTES] = JSON.parse(raw); } catch (_) { }
   return JSON.stringify(data, null, 2);
 }
 
@@ -87,6 +89,9 @@ export function importData(json: string): boolean {
     if (Array.isArray(data[KEY_USERS])) {
       saveUsers(data[KEY_USERS] as string[]);
       imported = true;
+    }
+    if (typeof data[KEY_USER_NOTES] === 'object' && data[KEY_USER_NOTES] !== null) {
+      try { localStorage.setItem(KEY_USER_NOTES, JSON.stringify(data[KEY_USER_NOTES])); imported = true; } catch (_) { }
     }
     return imported;
   } catch (_) { return false; }
