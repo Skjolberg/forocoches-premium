@@ -222,13 +222,6 @@ src/
 
 ## 📋 TODO
 
-### Notas por usuario
-- Poder añadir **notas personalizadas** a cada usuario desde:
-  - El listado de un hilo (junto al emoji de Denunciar usuario)
-  - El perfil del usuario (`member.php`) que indique en la Información de Contacto del usuario las notas y descripción de ellas.
-- Las notas se guardan localmente en `localStorage` y se muestran al lado del icono de Denunciar usuario en los posts y al visitar su perfil
-- Edición rápida: clic en la nota para modificar o eliminar
-
 ### Resaltar hilos por palabras y usuarios
 - Listas independientes de ocultado para palabras y usuarios a resaltar
 - Color de fondo configurable por tipo de resaltado (palabra, usuario, pole)
