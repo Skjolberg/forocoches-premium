@@ -11,8 +11,9 @@ function ts(): string {
 export function log(module: string, ...messages: string[]): void {
   const time = ts();
   const prefix = `${time} [${module}]`;
-  const line = prefix + ' ' + messages.join(' | ');
-  GM_log(line);
+  try {
+    if (typeof GM_log !== 'undefined') { GM_log(prefix + ' ' + messages.join(' | ')); }
+  } catch (_) { /* ignore */ }
 }
 
 let toastId: ReturnType<typeof setTimeout> | null = null;
