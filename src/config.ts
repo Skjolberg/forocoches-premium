@@ -5,7 +5,7 @@ import { getConfig, saveConfig } from './storage';
 //  GENERIC CONFIG FIELDS
 // ============================================================
 
-export type ConfigKey = 'autoMinimize' | 'autoMinimizeWords' | 'autoRedirectOP' | 'autoReloadIgnore' | 'showScrollUp' | 'showScrollDown' | 'showPlaceholder' | 'disablePostHiding' | 'hideThreadByAuthor' | 'highlightZeroMessages' | 'showPoleButton' | 'poleSearchPages' | 'blockAds';
+export type ConfigKey = 'autoMinimize' | 'autoMinimizeWords' | 'autoRedirectOP' | 'autoReloadIgnore' | 'showScrollUp' | 'showScrollDown' | 'showPlaceholder' | 'disablePostHiding' | 'hideThreadByAuthor' | 'highlightZeroMessages' | 'prioritizeHighlightOverHide' | 'showPoleButton' | 'poleSearchPages' | 'blockAds';
 
 const DEFAULTS: Record<ConfigKey, boolean> = {
   autoMinimize: true,
@@ -18,6 +18,7 @@ const DEFAULTS: Record<ConfigKey, boolean> = {
   disablePostHiding: false,
   hideThreadByAuthor: true,
   highlightZeroMessages: true,
+  prioritizeHighlightOverHide: false,
   showPoleButton: true,
   poleSearchPages: true,
   blockAds: true,
@@ -34,6 +35,7 @@ const LABELS: Record<ConfigKey, string> = {
   disablePostHiding: 'Desactivar ocultación mensajes',
   hideThreadByAuthor: 'Ocultar hilos por autor',
   highlightZeroMessages: 'Resaltar hilos sin respuestas',
+  prioritizeHighlightOverHide: 'Priorizar resaltado sobre ocultado',
   showPoleButton: 'Bot\u00F3n Pole',
   poleSearchPages: 'Buscar en p\u00E1ginas siguientes',
   blockAds: 'Bloquear publicidad',
@@ -52,7 +54,7 @@ function setConfigField(key: ConfigKey, v: boolean): void {
 }
 
 // ============================================================
-//  PUBLIC API (identical behavior, one-liners)
+//  PUBLIC API
 // ============================================================
 
 export function getAutoMinimize(): boolean { return getConfigField('autoMinimize'); }
@@ -95,6 +97,9 @@ export function setHighlightColor(v: string): void {
   saveConfig(c);
   log('CONFIG', 'Color resaltado: ' + v);
 }
+
+export function getPrioritizeHighlightOverHide(): boolean { return getConfigField('prioritizeHighlightOverHide'); }
+export function setPrioritizeHighlightOverHide(v: boolean): void { setConfigField('prioritizeHighlightOverHide', v); }
 
 export function getShowPoleButton(): boolean { return getConfigField('showPoleButton'); }
 export function setShowPoleButton(v: boolean): void { setConfigField('showPoleButton', v); }

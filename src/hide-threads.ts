@@ -1,12 +1,11 @@
 import { toast, log } from './toast';
 import { normalizeStr } from './utils';
 import { findThreads } from './threads';
-import type { HiddenItem } from './types';
-import { getHideThreadByAuthor, getHighlightZeroMessages, getHighlightColor } from './config';
+import type { HiddenItem, HighlightGroup } from './types';
+import { getHideThreadByAuthor, getHighlightZeroMessages, getHighlightColor, getPrioritizeHighlightOverHide } from './config';
+import { getHighlightUserGroups, getHighlightWordGroups } from './storage';
 import { detectAdapter } from './dom-adapter';
 import { STYLE } from './ui/styles';
-
-// run() is defined in runner.ts
 
 function showHiddenSummary(hidden: HiddenItem[]): void {
   const old = document.getElementById('fc-hidden-summary');
@@ -28,11 +27,20 @@ function showHiddenSummary(hidden: HiddenItem[]): void {
     row.style.cssText = STYLE.HIDDEN_ROW;
 
     const el = document.createElement('span');
-    el.style.cssText = 'text-decoration:line-through;';
+    if (item.highlightColor) {
+      el.style.cssText = 'font-weight:bold;';
+    } else {
+      el.style.cssText = 'text-decoration:line-through;';
+    }
     if (item.link) {
       const anchor = document.createElement('a');
       anchor.href = item.link; anchor.textContent = item.title;
-      anchor.style.cssText = 'color:inherit;text-decoration:line-through;'; anchor.target = '_blank';
+      if (item.highlightColor) {
+        anchor.style.cssText = 'color:inherit;font-weight:bold;';
+      } else {
+        anchor.style.cssText = 'color:inherit;text-decoration:line-through;';
+      }
+      anchor.target = '_blank';
       el.appendChild(anchor);
     } else { el.textContent = item.title; }
 
@@ -42,6 +50,14 @@ function showHiddenSummary(hidden: HiddenItem[]): void {
 
     row.appendChild(el);
     row.appendChild(info);
+
+    if (item.highlightColor) {
+      row.style.background = item.highlightColor;
+      row.style.borderRadius = '4px';
+      row.style.padding = '3px 6px';
+      row.style.margin = '2px -6px';
+    }
+
     wrap.appendChild(row);
   });
 
@@ -58,51 +74,100 @@ function matchWordsInText(text: string, words: string[], prefix?: string): strin
   return '';
 }
 
+function matchHighlightWordGroups(title: string, groups: HighlightGroup[]): { color: string; desc: string } | null {
+  const normalized = normalizeStr(title);
+  for (const group of groups) {
+    for (const word of group.items) {
+      if (normalized.indexOf(normalizeStr(word)) !== -1) {
+        return { color: group.color, desc: group.desc };
+      }
+    }
+  }
+  return null;
+}
+
 let lastHiddenCount = -1;
 
 export function hideThreads(users: string[], words: string[]): void {
   const threads = findThreads();
   if (threads.length === 0) { toast('No se encontraron hilos'); return; }
 
-  const hidden: HiddenItem[] = [];
   const total = threads.length;
-
   const ad = detectAdapter();
+
   const hideByAuthor = getHideThreadByAuthor();
+  const prioritizeHL = getPrioritizeHighlightOverHide();
+  const hlUserGroups = getHighlightUserGroups();
+  const hlWordGroups = getHighlightWordGroups();
+  const userThemeOk = ad.theme === 'mobile-v2' || ad.theme === 'desktop-v1' || ad.theme === 'desktop-v2';
+
+  const hidden: HiddenItem[] = [];
+  const highlightMap = new Map<HTMLElement, string>();
 
   threads.forEach((thread) => {
     if (!thread.container) return;
     if (thread.container.style.display === 'none') return;
 
-    let reason = '';
+    let hlColor = '';
+    let hlDesc = '';
 
-    // 1) By author (mobile-v2, desktop-v1, desktop-v2 when config enabled)
-    if (users.length > 0 && thread.author && (ad.theme === 'mobile-v2' || ad.theme === 'desktop-v1' || ad.theme === 'desktop-v2') && hideByAuthor) {
-      if (users.indexOf(thread.author) !== -1) reason = '@' + thread.author;
+    // 1) Check highlight user groups (highest priority)
+    if (hlUserGroups.length > 0 && thread.author && userThemeOk) {
+      for (const group of hlUserGroups) {
+        if (group.items.indexOf(thread.author) !== -1) {
+          hlColor = group.color;
+          hlDesc = group.desc;
+          break;
+        }
+      }
     }
 
-    // 2) By keyword in title
-    if (!reason && words.length > 0 && thread.title) {
-      reason = matchWordsInText(thread.title, words);
+    // 2) Check highlight word groups (only if no user highlight)
+    if (!hlColor && hlWordGroups.length > 0 && thread.title) {
+      const match = matchHighlightWordGroups(thread.title, hlWordGroups);
+      if (match) {
+        hlColor = match.color;
+        hlDesc = match.desc;
+      }
     }
 
-    // 3) RAW fallback (threads without title element)
-    if (!reason && words.length > 0 && !thread.title && thread.container.textContent) {
-      reason = matchWordsInText(thread.container.textContent, words, 'RAW:');
+    // 3) Check hide by ignored user
+    let shouldHide = false;
+    let hideReason = '';
+    if (users.length > 0 && thread.author && userThemeOk && hideByAuthor) {
+      if (users.indexOf(thread.author) !== -1) {
+        shouldHide = true;
+        hideReason = '@' + thread.author;
+      }
     }
 
-    if (reason) {
-      hidden.push({
-        container: thread.container,
-        extraContainer: thread.extraContainer,
-        title: thread.title,
-        author: thread.author,
-        reason,
-        link: thread.a ? thread.a.href : '',
-      });
+    // 4) Check hide by ignored word
+    if (!shouldHide && words.length > 0 && thread.title) {
+      const wordMatch = matchWordsInText(thread.title, words);
+      if (wordMatch) {
+        shouldHide = true;
+        hideReason = wordMatch;
+      }
+    }
+
+    // 5) Resolve conflict between hide and highlight
+    if (shouldHide && hlColor) {
+      if (prioritizeHL) {
+        // Highlight wins → don't hide, apply highlight
+        highlightMap.set(thread.container, hlColor);
+      } else {
+        // Hide wins → hide, show highlighted in summary
+        const reasonLabel = hideReason + (hlDesc ? ' [' + hlDesc + ']' : '');
+        hidden.push({ container: thread.container, extraContainer: thread.extraContainer, title: thread.title, author: thread.author, reason: reasonLabel, highlightColor: hlColor, link: thread.a ? thread.a.href : '' });
+      }
+    } else if (shouldHide) {
+      hidden.push({ container: thread.container, extraContainer: thread.extraContainer, title: thread.title, author: thread.author, reason: hideReason, link: thread.a ? thread.a.href : '' });
+    } else if (hlColor) {
+      highlightMap.set(thread.container, hlColor);
     }
   });
 
+  // Apply hiding
   hidden.forEach((item) => {
     if (item.container) item.container.style.display = 'none';
     if (item.extraContainer) item.extraContainer.style.display = 'none';
@@ -110,13 +175,19 @@ export function hideThreads(users: string[], words: string[]): void {
     if (sep) sep.style.display = 'none';
   });
 
-  // Highlight threads with 0 messages
+  // Apply user/word highlights in place
+  highlightMap.forEach((color, container) => {
+    container.style.background = color;
+    container.querySelectorAll<HTMLElement>('td').forEach((td) => { td.style.background = color; });
+  });
+
+  // Highlight threads with 0 messages (only if not already highlighted)
   const hzm = getHighlightZeroMessages();
   const hzColor = getHighlightColor();
   if (hzm) {
     threads.forEach((thread) => {
       if (!thread.container) return;
-      if (thread.messageCount === 0) {
+      if (thread.messageCount === 0 && !highlightMap.has(thread.container)) {
         thread.container.style.background = hzColor;
         thread.container.querySelectorAll<HTMLElement>('td').forEach(function (td) { td.style.background = hzColor; });
       }

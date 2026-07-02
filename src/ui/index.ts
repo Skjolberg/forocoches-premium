@@ -6,7 +6,7 @@ import { getShowScrollUp, getShowScrollDown, getShowPoleButton, getPoleMessage, 
 import { buildUsersTab, renderUserList } from './tab-users';
 import { buildWordsTab } from './tab-words';
 import { buildConfigTab } from './tab-config';
-import { buildLogsTab } from './tab-logs';
+import { buildHighlightTab } from './tab-highlight';
 import { run } from '../runner';
 import { findThreads } from '../threads';
 import { QUICK_REPLY_SELECTOR } from '../selectors';
@@ -71,16 +71,15 @@ export function togglePanel(): void {
   tabUsers.style.cssText = STYLE.TAB_ACTIVE;
   const tabWords = document.createElement('div'); tabWords.textContent = 'Palabras';
   tabWords.style.cssText = STYLE.TAB_INACTIVE;
+  const tabHighlight = document.createElement('div'); tabHighlight.textContent = 'Resaltado';
+  tabHighlight.style.cssText = 'width:55px;text-align:center;padding:6px 2px;cursor:pointer;font-size:13px;color:#999;';
   const tabConfig = document.createElement('div'); tabConfig.textContent = 'Config';
   tabConfig.style.cssText = 'width:45px;text-align:center;padding:6px 2px;cursor:pointer;font-size:13px;color:#999;';
-  const tabLogs = document.createElement('div'); tabLogs.textContent = 'Logs';
-  tabLogs.title = 'Ver logs de depuracion';
-  tabLogs.style.cssText = 'width:40px;text-align:center;padding:6px 2px;cursor:pointer;font-size:13px;color:#999;';
 
   tabBar.appendChild(tabUsers);
   tabBar.appendChild(tabWords);
+  tabBar.appendChild(tabHighlight);
   tabBar.appendChild(tabConfig);
-  tabBar.appendChild(tabLogs);
 
   content = document.createElement('div');
   content.id = 'fcp-content';
@@ -89,8 +88,8 @@ export function togglePanel(): void {
   function resetTabs(): void {
     tabUsers.style.cssText = STYLE.TAB_INACTIVE;
     tabWords.style.cssText = STYLE.TAB_INACTIVE;
+    tabHighlight.style.cssText = 'width:55px;text-align:center;padding:6px 2px;cursor:pointer;font-size:13px;color:#999;';
     tabConfig.style.cssText = 'width:45px;text-align:center;padding:6px 2px;cursor:pointer;font-size:13px;color:#999;';
-    tabLogs.style.cssText = 'width:40px;text-align:center;padding:6px 2px;cursor:pointer;font-size:13px;color:#999;';
   }
 
   tabUsers.addEventListener('click', () => {
@@ -103,17 +102,16 @@ export function togglePanel(): void {
     tabWords.style.cssText = STYLE.TAB_ACTIVE;
     if (content) buildWordsTab(content);
   });
+  tabHighlight.addEventListener('click', () => {
+    log('PANEL', 'Tab: Resaltar'); resetTabs();
+    tabHighlight.style.cssText = 'width:55px;text-align:center;padding:6px 2px;cursor:pointer;font-size:13px;font-weight:bold;color:#FD5D4D;';
+    if (content) buildHighlightTab(content);
+  });
   tabConfig.addEventListener('click', () => {
     log('PANEL', 'Tab: Config'); resetTabs();
     tabConfig.style.cssText = 'width:45px;text-align:center;padding:6px 2px;cursor:pointer;font-size:13px;font-weight:bold;color:#FD5D4D;';
     if (content) buildConfigTab(content);
   });
-  tabLogs.addEventListener('click', () => {
-    log('PANEL', 'Tab: Logs'); resetTabs();
-    tabLogs.style.cssText = 'width:40px;text-align:center;padding:6px 2px;cursor:pointer;font-size:13px;font-weight:bold;color:#FD5D4D;';
-    if (content) buildLogsTab(content);
-  });
-
   panel.appendChild(tabBar);
   panel.appendChild(content);
 

@@ -11,6 +11,7 @@ import {
   getHideThreadByAuthor, setHideThreadByAuthor,
   getHighlightZeroMessages, setHighlightZeroMessages,
   getHighlightColor, setHighlightColor,
+  getPrioritizeHighlightOverHide, setPrioritizeHighlightOverHide,
   getShowPoleButton, setShowPoleButton,
   getPoleSearchPages, setPoleSearchPages,
   getPoleMessage, setPoleMessage,
@@ -98,26 +99,31 @@ export function buildConfigTab(content: HTMLElement): void {
   addSectionHeader(content, 'Hilos');
   addOption(content, 'Auto-minimizar al guardar palabras', 'Al guardar palabras clave, el panel se cierra solo.', getAutoMinimizeWords, setAutoMinimizeWords);
   addOption(content, 'Ocultar hilos por autor', 'Solo compatible con el dise\u00F1o Nuevo. Oculta hilos cuyo creador est\u00E9 en tu lista de ignorados. No funciona en dise\u00F1o Cl\u00E1sico.', getHideThreadByAuthor, setHideThreadByAuthor);
+
+  // ---- RESALTADOS ----
+  addSectionHeader(content, 'Resaltados');
   addOption(content, 'Resaltar hilos sin respuestas', 'Marca los hilos con 0 mensajes con un color de fondo.', getHighlightZeroMessages, setHighlightZeroMessages);
 
-  // Color picker for highlight
-  const colorRow = document.createElement('div');
-  colorRow.style.cssText = 'display:flex;align-items:center;justify-content:space-between;padding:4px 0 6px 0;';
-  const colorLbl = document.createElement('span');
-  colorLbl.textContent = 'Color de resaltado';
-  colorLbl.style.cssText = 'font-size:12px;color:#666;flex:1;';
-  colorRow.appendChild(colorLbl);
+  // Color picker for 0 messages
+  const hzColorRow = document.createElement('div');
+  hzColorRow.style.cssText = 'display:flex;align-items:center;justify-content:space-between;padding:4px 0 6px 0;';
+  const hzColorLbl = document.createElement('span');
+  hzColorLbl.textContent = 'Color 0 respuestas';
+  hzColorLbl.style.cssText = 'font-size:12px;color:#666;flex:1;';
+  hzColorRow.appendChild(hzColorLbl);
 
-  const colorPicker = document.createElement('input');
-  colorPicker.type = 'color';
-  colorPicker.value = getHighlightColor();
-  colorPicker.style.cssText = 'width:40px;height:28px;border:1px solid #ccc;border-radius:4px;padding:1px;cursor:pointer;background:none;';
-  colorPicker.addEventListener('change', () => {
-    setHighlightColor(colorPicker.value);
+  const hzColorPicker = document.createElement('input');
+  hzColorPicker.type = 'color';
+  hzColorPicker.value = getHighlightColor();
+  hzColorPicker.style.cssText = 'width:40px;height:28px;border:1px solid #ccc;border-radius:4px;padding:1px;cursor:pointer;background:none;';
+  hzColorPicker.addEventListener('change', () => {
+    setHighlightColor(hzColorPicker.value);
     toast('Color cambiado. Recarga la p\u00E1gina para ver el cambio.');
   });
-  colorRow.appendChild(colorPicker);
-  content.appendChild(colorRow);
+  hzColorRow.appendChild(hzColorPicker);
+  content.appendChild(hzColorRow);
+
+  addOption(content, 'Priorizar resaltado sobre ocultado', 'Si un hilo coincide con un grupo de resaltado y tambi\u00E9n con un criterio de ocultado, prevalece el resaltado (no se oculta). Si se desactiva, prevalece el ocultado.', getPrioritizeHighlightOverHide, setPrioritizeHighlightOverHide);
 
   // ---- MENSAJES ----
   addSectionHeader(content, 'Mensajes');

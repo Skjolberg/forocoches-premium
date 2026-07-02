@@ -14,4 +14,12 @@ export interface HiddenItem {
   author: string;
   reason: string;
   link: string;
+  highlightColor?: string;
+}
+
+export interface HighlightGroup {
+  id: string;
+  desc: string;
+  items: string[];
+  color: string;
 }
