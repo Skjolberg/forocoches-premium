@@ -47,6 +47,8 @@ export interface FCConfig {
   hideThreadByAuthor?: boolean;
   highlightZeroMessages?: boolean;
   highlightZeroMessagesColor?: string;
+  highlightOP?: boolean;
+  highlightOPColor?: string;
   prioritizeHighlightOverHide?: boolean;
   showPoleButton?: boolean;
   poleMessage?: string;

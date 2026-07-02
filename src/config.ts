@@ -5,7 +5,7 @@ import { getConfig, saveConfig } from './storage';
 //  GENERIC CONFIG FIELDS
 // ============================================================
 
-export type ConfigKey = 'autoMinimize' | 'autoMinimizeWords' | 'autoRedirectOP' | 'autoReloadIgnore' | 'showScrollUp' | 'showScrollDown' | 'showPlaceholder' | 'disablePostHiding' | 'hideThreadByAuthor' | 'highlightZeroMessages' | 'prioritizeHighlightOverHide' | 'showPoleButton' | 'poleSearchPages' | 'blockAds';
+export type ConfigKey = 'autoMinimize' | 'autoMinimizeWords' | 'autoRedirectOP' | 'autoReloadIgnore' | 'showScrollUp' | 'showScrollDown' | 'showPlaceholder' | 'disablePostHiding' | 'hideThreadByAuthor' | 'highlightZeroMessages' | 'highlightOP' | 'prioritizeHighlightOverHide' | 'showPoleButton' | 'poleSearchPages' | 'blockAds';
 
 const DEFAULTS: Record<ConfigKey, boolean> = {
   autoMinimize: true,
@@ -18,6 +18,7 @@ const DEFAULTS: Record<ConfigKey, boolean> = {
   disablePostHiding: false,
   hideThreadByAuthor: true,
   highlightZeroMessages: true,
+  highlightOP: true,
   prioritizeHighlightOverHide: false,
   showPoleButton: true,
   poleSearchPages: true,
@@ -35,6 +36,7 @@ const LABELS: Record<ConfigKey, string> = {
   disablePostHiding: 'Desactivar ocultación mensajes',
   hideThreadByAuthor: 'Ocultar hilos por autor',
   highlightZeroMessages: 'Resaltar hilos sin respuestas',
+  highlightOP: 'Resaltar mensajes del OP',
   prioritizeHighlightOverHide: 'Priorizar resaltado sobre ocultado',
   showPoleButton: 'Bot\u00F3n Pole',
   poleSearchPages: 'Buscar en p\u00E1ginas siguientes',
@@ -96,6 +98,20 @@ export function setHighlightColor(v: string): void {
   c.highlightZeroMessagesColor = v;
   saveConfig(c);
   log('CONFIG', 'Color resaltado: ' + v);
+}
+
+export function getHighlightOP(): boolean { return getConfigField('highlightOP'); }
+export function setHighlightOP(v: boolean): void { setConfigField('highlightOP', v); }
+
+export function getHighlightOPColor(): string {
+  const c = getConfig();
+  return c.highlightOPColor || '#FFE0B2';
+}
+export function setHighlightOPColor(v: string): void {
+  const c = getConfig();
+  c.highlightOPColor = v;
+  saveConfig(c);
+  log('CONFIG', 'Color resaltado OP: ' + v);
 }
 
 export function getPrioritizeHighlightOverHide(): boolean { return getConfigField('prioritizeHighlightOverHide'); }

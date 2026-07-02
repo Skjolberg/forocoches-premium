@@ -1,7 +1,7 @@
 import { log, toast } from './toast';
 import { getUsers, getWords } from './storage';
 import { hideThreads } from './hide-threads';
-import { hidePosts, addIgnorePostButtons } from './hide-posts';
+import { hidePosts, addIgnorePostButtons, highlightOPPosts } from './hide-posts';
 import { hideAds } from './hide-ads';
 import { findThreads } from './threads';
 import { injectPostNotes, injectProfileNote } from './user-notes';
@@ -112,6 +112,6 @@ export function run(): void {
     }
   }
   if (path.indexOf('forumdisplay.php') !== -1) { hideThreads(users, words); handlePoleSearch(); }
-  else if (path.indexOf('showthread.php') !== -1) { hidePosts(users); addIgnorePostButtons(); injectPostNotes(); handlePole(); }
+  else if (path.indexOf('showthread.php') !== -1) { hidePosts(users); addIgnorePostButtons(); highlightOPPosts(); injectPostNotes(); handlePole(); }
   else if (path.indexOf('member.php') !== -1) { injectProfileNote(); }
 }

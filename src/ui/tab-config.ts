@@ -11,6 +11,8 @@ import {
   getHideThreadByAuthor, setHideThreadByAuthor,
   getHighlightZeroMessages, setHighlightZeroMessages,
   getHighlightColor, setHighlightColor,
+  getHighlightOP, setHighlightOP,
+  getHighlightOPColor, setHighlightOPColor,
   getPrioritizeHighlightOverHide, setPrioritizeHighlightOverHide,
   getShowPoleButton, setShowPoleButton,
   getPoleSearchPages, setPoleSearchPages,
@@ -122,6 +124,27 @@ export function buildConfigTab(content: HTMLElement): void {
   });
   hzColorRow.appendChild(hzColorPicker);
   content.appendChild(hzColorRow);
+
+  // Highlight OP
+  addOption(content, 'Resaltar mensajes del OP', 'Marca los mensajes del autor del hilo con un color de fondo y una etiqueta "OP".', getHighlightOP, setHighlightOP);
+
+  const opColorRow = document.createElement('div');
+  opColorRow.style.cssText = 'display:flex;align-items:center;justify-content:space-between;padding:4px 0 6px 0;';
+  const opColorLbl = document.createElement('span');
+  opColorLbl.textContent = 'Color resaltado OP';
+  opColorLbl.style.cssText = 'font-size:12px;color:#666;flex:1;';
+  opColorRow.appendChild(opColorLbl);
+
+  const opColorPicker = document.createElement('input');
+  opColorPicker.type = 'color';
+  opColorPicker.value = getHighlightOPColor();
+  opColorPicker.style.cssText = 'width:40px;height:28px;border:1px solid #ccc;border-radius:4px;padding:1px;cursor:pointer;background:none;';
+  opColorPicker.addEventListener('change', () => {
+    setHighlightOPColor(opColorPicker.value);
+    toast('Color cambiado. Recarga la p\u00E1gina para ver el cambio.');
+  });
+  opColorRow.appendChild(opColorPicker);
+  content.appendChild(opColorRow);
 
   addOption(content, 'Priorizar resaltado sobre ocultado', 'Si un hilo coincide con un grupo de resaltado y tambi\u00E9n con un criterio de ocultado, prevalece el resaltado (no se oculta). Si se desactiva, prevalece el ocultado.', getPrioritizeHighlightOverHide, setPrioritizeHighlightOverHide);
 

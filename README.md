@@ -231,20 +231,6 @@ src/
 
 ## 📋 TODO
 
-### Resaltar hilos por palabras y usuarios
-- Listas independientes de ocultado para palabras y usuarios a resaltar
-- Color de fondo configurable por tipo de resaltado (palabra, usuario, pole)
-- Funciona en el listado de hilos (forumdisplay)
-
-### Usuarios VIP
-- Marcar usuarios como VIP desde el panel o desde sus posts
-- Resaltar sus hilos en el listado con color propio
-- Resaltar sus mensajes dentro de los hilos (showthread)
-- Opción de no ocultar nunca hilos de VIPs aunque coincidan con filtros
-
-### Resaltar mensajes del OP en showthread
-- Color de fondo diferenciado para los posts del creador del hilo
-- Identificación visual rápida del OP en discusiones largas
 
 ---
 
