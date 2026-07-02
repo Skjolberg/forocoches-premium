@@ -5,7 +5,7 @@ import { getConfig, saveConfig } from './storage';
 //  GENERIC CONFIG FIELDS
 // ============================================================
 
-export type ConfigKey = 'autoMinimize' | 'autoMinimizeWords' | 'autoRedirectOP' | 'autoReloadIgnore' | 'showScrollUp' | 'showScrollDown' | 'showPlaceholder' | 'disablePostHiding' | 'hideThreadByAuthor' | 'highlightZeroMessages' | 'showPoleButton' | 'poleSearchPages' | 'blockAds' | 'hideNotices';
+export type ConfigKey = 'autoMinimize' | 'autoMinimizeWords' | 'autoRedirectOP' | 'autoReloadIgnore' | 'showScrollUp' | 'showScrollDown' | 'showPlaceholder' | 'disablePostHiding' | 'hideThreadByAuthor' | 'highlightZeroMessages' | 'showPoleButton' | 'poleSearchPages' | 'blockAds';
 
 const DEFAULTS: Record<ConfigKey, boolean> = {
   autoMinimize: true,
@@ -21,7 +21,6 @@ const DEFAULTS: Record<ConfigKey, boolean> = {
   showPoleButton: true,
   poleSearchPages: true,
   blockAds: true,
-  hideNotices: true,
 };
 
 const LABELS: Record<ConfigKey, string> = {
@@ -38,7 +37,6 @@ const LABELS: Record<ConfigKey, string> = {
   showPoleButton: 'Bot\u00F3n Pole',
   poleSearchPages: 'Buscar en p\u00E1ginas siguientes',
   blockAds: 'Bloquear publicidad',
-  hideNotices: 'Ocultar avisos',
 };
 
 function getConfigField(key: ConfigKey): boolean {
@@ -106,8 +104,6 @@ export function setPoleSearchPages(v: boolean): void { setConfigField('poleSearc
 
 export function getBlockAds(): boolean { return getConfigField('blockAds'); }
 export function setBlockAds(v: boolean): void { setConfigField('blockAds', v); }
-export function getHideNotices(): boolean { return getConfigField('hideNotices'); }
-export function setHideNotices(v: boolean): void { setConfigField('hideNotices', v); }
 
 export function getDebugMode(): boolean { return true; }
 

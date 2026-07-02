@@ -15,7 +15,6 @@ import {
   getPoleSearchPages, setPoleSearchPages,
   getPoleMessage, setPoleMessage,
   getBlockAds, setBlockAds,
-  getHideNotices, setHideNotices,
 } from '../config';
 import { exportData, importData } from '../storage';
 import { STYLE } from './styles';
@@ -133,8 +132,7 @@ export function buildConfigTab(content: HTMLElement): void {
 
   // ---- PUBLICIDAD ----
   addSectionHeader(content, 'Publicidad');
-  addOption(content, 'Bloquear publicidad', 'Elimina banners y anuncios de la pagina (optidigital, skyscraper, flotantes, etc.).', getBlockAds, setBlockAds);
-  addOption(content, 'Ocultar avisos', 'Oculta los mensajes de aviso del foro (noticias, promociones, cookies).', getHideNotices, setHideNotices);
+  addOption(content, 'Bloquear publicidad', 'Elimina banners, anuncios, avisos y noticias promocionadas de la pagina.', getBlockAds, setBlockAds);
 
   // ---- INTERFAZ ----
   addSectionHeader(content, 'Interfaz');
@@ -162,12 +160,12 @@ export function buildConfigTab(content: HTMLElement): void {
   addSectionHeader(content, 'Exportar / Importar');
 
   const exportDesc = document.createElement('div');
-  exportDesc.textContent = 'Exporta la configuraci\u00F3n y las palabras ignoradas a un archivo .json. Puedes importarlo despu\u00E9s para restaurar los datos. Si borras los datos del navegador antes de hacer esto perderás las palabras ignoradas que hayas registrado y la config.';
+  exportDesc.textContent = 'Exporta la configuraci\u00F3n, notas y las palabras ignoradas a un archivo .json. Puedes importarlo despu\u00E9s para restaurar los datos. Si borras los datos del navegador antes de hacer esto perderás todo.';
   exportDesc.style.cssText = STYLE.CONFIG_DESC;
   content.appendChild(exportDesc);
 
   const exportBtn = document.createElement('button');
-  exportBtn.textContent = 'Exportar configuraci\u00F3n';
+  exportBtn.textContent = 'Exportar';
   exportBtn.style.cssText = 'border:none;background:#4A90D9;color:white;border-radius:4px;padding:6px 12px;cursor:pointer;font-size:11px;font-weight:bold;display:block;width:100%;margin-bottom:6px;';
   exportBtn.addEventListener('click', () => {
     const blob = new Blob([exportData()], { type: 'application/json' });
@@ -184,7 +182,7 @@ export function buildConfigTab(content: HTMLElement): void {
   content.appendChild(exportBtn);
 
   const importBtn = document.createElement('button');
-  importBtn.textContent = 'Importar configuraci\u00F3n';
+  importBtn.textContent = 'Importar';
   importBtn.style.cssText = 'border:none;background:#FD5D4D;color:white;border-radius:4px;padding:6px 12px;cursor:pointer;font-size:11px;font-weight:bold;display:block;width:100%;';
   const fileInput = document.createElement('input');
   fileInput.type = 'file';

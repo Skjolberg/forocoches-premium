@@ -1,5 +1,5 @@
 import { log } from './toast';
-import { getBlockAds, getHideNotices } from './config';
+import { getBlockAds } from './config';
 
 const AD_CSS_ID = 'fcp-adblock';
 
@@ -11,7 +11,6 @@ function getAdCSS(): string {
 .float_banner, .ad-center { display: none !important; }
 iframe[name="googlefcPresent"] { display: none !important; }
 iframe[name="__tcfapiLocator"], iframe[name="__sdcmpapiLocator"] { display: none !important; }
-#sd-cmp { display: none !important; }
 .fc-custom-promo-wrap, .fc-custom-promo-wrap-mobile { display: none !important; }
 .fixed_adslot { display: none !important; }
 section[style*="min-width: 300px"] { display: none !important; }
@@ -23,9 +22,8 @@ function injectAdCSS(): void {
   const existing = document.getElementById(AD_CSS_ID);
   if (existing) existing.remove();
 
-  let css = '';
-  if (getBlockAds()) css += getAdCSS();
-  if (getHideNotices()) css += 'form#vbnotices { display: none !important; }\n#notices-container, .notices-container { display: none !important; }\n';
+  let css = getAdCSS();
+  css += 'form#vbnotices { display: none !important; }\n#notices-container, .notices-container { display: none !important; }\n';
 
   if (!css) return;
   const style = document.createElement('style');
@@ -123,21 +121,17 @@ function removeNoticesContainer(): void {
 }
 
 export function hideAds(): void {
-  if (!getBlockAds() && !getHideNotices()) return;
+  if (!getBlockAds()) return;
   log('ADS', 'Bloqueando publicidad...');
   injectAdCSS();
-  if (getBlockAds()) {
-    removeMobileAdIframes();
-    removeFixedAdslots();
-    removeScrollToTop();
-    removeEmptySidebarSections();
-    removeOptidigitalWrappers();
-    removeAdListItems();
-    removeCustomPromos();
-    removeSidebarAdTables();
-  }
-  if (getHideNotices()) {
-    removeNoticeForm();
-    removeNoticesContainer();
-  }
+  removeMobileAdIframes();
+  removeFixedAdslots();
+  removeScrollToTop();
+  removeEmptySidebarSections();
+  removeOptidigitalWrappers();
+  removeAdListItems();
+  removeCustomPromos();
+  removeSidebarAdTables();
+  removeNoticeForm();
+  removeNoticesContainer();
 }
