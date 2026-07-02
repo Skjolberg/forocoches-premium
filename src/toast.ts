@@ -1,6 +1,6 @@
 import { STYLE } from './ui/styles';
 
-export const debugLog: string[] = [];
+declare function GM_log(message: string): void;
 
 function ts(): string {
   var d = new Date();
@@ -11,7 +11,8 @@ function ts(): string {
 export function log(module: string, ...messages: string[]): void {
   const time = ts();
   const prefix = `${time} [${module}]`;
-  debugLog.push(prefix + ' ' + messages.join(' | '));
+  const line = prefix + ' ' + messages.join(' | ');
+  GM_log(line);
 }
 
 let toastId: ReturnType<typeof setTimeout> | null = null;

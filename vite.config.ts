@@ -19,7 +19,7 @@ export default defineConfig({
           'Oculta hilos por usuarios ignorados Y palabras clave, ignora mensajes de usuarios, poles automáticas, entre otras funciones.',
         author: 'skjolberg',
         match: 'https://forocoches.com/foro/*',
-        grant: 'none',
+        grant: 'GM_log',
         license: 'MIT',
       },
     }),
