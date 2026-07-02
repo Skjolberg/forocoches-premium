@@ -245,8 +245,9 @@ export function injectPostNotes(): void {
     if (!username) continue;
 
     const noteWidget = createNoteWidget(username);
-    if (isMobileV1) noteWidget.style.fontSize = '15px';
-    else if (isDesktopV2) noteWidget.style.fontSize = '19px';
+    if (isMobileV1) noteWidget.style.fontSize = '14px';
+    else if (isMobile) noteWidget.style.fontSize = '14px';
+    else if (isDesktopV2) noteWidget.style.fontSize = '18px';
     if (!isMobile && !isDesktopV2) noteWidget.style.verticalAlign = '-2px';
     if (isMobileV1) {
       const sep = document.createTextNode(' | ');
