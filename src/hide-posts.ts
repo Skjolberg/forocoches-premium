@@ -226,13 +226,54 @@ export function highlightOPPosts(): void {
     const authorLink = allLinks.length > 0 ? allLinks[allLinks.length - 1] : null;
     if (authorLink) {
       if (isMobileV1) {
-        const parent = authorLink.parentNode;
-        if (parent) {
-          const wrap = document.createElement('span');
-          wrap.style.cssText = 'display:inline-flex;align-items:center;gap:4px;';
-          parent.insertBefore(wrap, authorLink);
-          wrap.appendChild(badge);
-          wrap.appendChild(authorLink);
+        // Single badge spanning both lines via posthead flex restructure
+        const posthead = post.querySelector('.posthead');
+        if (posthead) {
+          // Read current children before modifying
+          const children = Array.from(posthead.children);
+
+          // Outer flex row: badge column + info column
+          const row = document.createElement('div');
+          row.style.cssText = 'display:flex;align-items:stretch;gap:6px;';
+
+          // Badge column spanning full height
+          const badgeCol = document.createElement('span');
+          badgeCol.className = 'fc-op-badge';
+          badgeCol.textContent = '\uD83D\uDCCC OP';
+          badgeCol.style.cssText = 'display:flex;align-items:center;background:#FF6B35;color:white;font-size:10px;font-weight:bold;padding:2px 5px;border-radius:3px;flex-shrink:0;margin-bottom:4px;';
+
+          // Info column: top row (xsaid + avatar), bottom row (postdate)
+          const infoCol = document.createElement('div');
+          infoCol.style.cssText = 'display:flex;flex-direction:column;flex:1;';
+
+          // Top row: xsaid on left, avatar on right
+          const topRow = document.createElement('div');
+          topRow.style.cssText = 'display:flex;align-items:center;';
+
+          // Find elements
+          const xsaid = posthead.querySelector('.xsaid');
+          const avatarLink = posthead.querySelector('a.fpostuseravatarlink');
+          const postdate = posthead.querySelector('.postdate');
+
+          // Clear posthead
+          posthead.innerHTML = '';
+
+          // Move xsaid into topRow (left side)
+          if (xsaid) topRow.appendChild(xsaid);
+          // Move avatar into topRow (right side via margin-left:auto)
+          if (avatarLink) {
+            (avatarLink as HTMLElement).style.marginLeft = 'auto';
+            topRow.appendChild(avatarLink);
+          }
+
+          // Build info column
+          infoCol.appendChild(topRow);
+          if (postdate) infoCol.appendChild(postdate);
+
+          // Build main row
+          row.appendChild(badgeCol);
+          row.appendChild(infoCol);
+          posthead.appendChild(row);
         }
       } else {
         authorLink.parentNode?.insertBefore(badge, authorLink);
