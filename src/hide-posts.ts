@@ -187,9 +187,7 @@ export function highlightOPPosts(): void {
     const author = findPostAuthor(post);
     if (!author || author !== op) return;
 
-    const isMobileV1 = ad.theme === 'mobile-v1';
-
-    if (isMobileV1) {
+    if (ad.theme === 'mobile-v1') {
       const parentUl = post.closest('ul');
       if (parentUl) {
         const linkRows = Array.from(parentUl.querySelectorAll<HTMLElement>('li.link'));
@@ -199,85 +197,91 @@ export function highlightOPPosts(): void {
 
         post.style.setProperty('background-color', bgColor, 'important');
         post.style.setProperty('background-image', 'none', 'important');
-        post.style.setProperty('border', '2px solid #FF6B35', 'important');
-        post.style.setProperty('box-shadow', '0 2px 8px rgba(255,107,53,0.3)', 'important');
+
+        parentUl.style.setProperty('border', '4px solid #FF6B35', 'important');
+        parentUl.style.setProperty('border-radius', '8px', 'important');
+        parentUl.style.setProperty('box-shadow', '0 2px 8px rgba(255,107,53,0.3)', 'important');
 
         if (linkRow) {
           linkRow.style.setProperty('background-color', bgColor, 'important');
           linkRow.style.setProperty('background-image', 'none', 'important');
-          linkRow.style.setProperty('border-left', '2px solid #FF6B35', 'important');
-          linkRow.style.setProperty('border-right', '2px solid #FF6B35', 'important');
-          linkRow.style.setProperty('border-bottom', '2px solid #FF6B35', 'important');
         }
-      }
-    } else {
-      post.style.background = bgColor;
-      post.style.border = '2px solid #FF6B35';
-      post.style.borderRadius = '8px';
-      post.style.boxShadow = '0 2px 12px rgba(255,107,53,0.25)';
-    }
 
-    const badge = document.createElement('span');
-    badge.className = 'fc-op-badge';
-    badge.textContent = '\uD83D\uDCCC OP';
-    badge.style.cssText = 'display:inline-block;background:#FF6B35;color:white;font-size:11px;font-weight:bold;padding:1px 6px;border-radius:3px;line-height:1.3;vertical-align:middle;';
-
-    const allLinks = post.querySelectorAll<HTMLAnchorElement>('a[href*="member.php?u="], a.bigusername[href*="member.php"]');
-    const authorLink = allLinks.length > 0 ? allLinks[allLinks.length - 1] : null;
-    if (authorLink) {
-      if (isMobileV1) {
-        // Single badge spanning both lines via posthead flex restructure
         const posthead = post.querySelector('.posthead');
         if (posthead) {
-          // Read current children before modifying
-          const children = Array.from(posthead.children);
-
-          // Outer flex row: badge column + info column
           const row = document.createElement('div');
           row.style.cssText = 'display:flex;align-items:stretch;gap:6px;';
-
-          // Badge column spanning full height
           const badgeCol = document.createElement('span');
           badgeCol.className = 'fc-op-badge';
           badgeCol.textContent = '\uD83D\uDCCC OP';
           badgeCol.style.cssText = 'display:flex;align-items:center;background:#FF6B35;color:white;font-size:10px;font-weight:bold;padding:2px 5px;border-radius:3px;flex-shrink:0;margin-bottom:4px;';
-
-          // Info column: top row (xsaid + avatar), bottom row (postdate)
           const infoCol = document.createElement('div');
           infoCol.style.cssText = 'display:flex;flex-direction:column;flex:1;';
-
-          // Top row: xsaid on left, avatar on right
           const topRow = document.createElement('div');
           topRow.style.cssText = 'display:flex;align-items:center;';
-
-          // Find elements
           const xsaid = posthead.querySelector('.xsaid');
           const avatarLink = posthead.querySelector('a.fpostuseravatarlink');
           const postdate = posthead.querySelector('.postdate');
-
-          // Clear posthead
           posthead.innerHTML = '';
-
-          // Move xsaid into topRow (left side)
           if (xsaid) topRow.appendChild(xsaid);
-          // Move avatar into topRow (right side via margin-left:auto)
           if (avatarLink) {
             (avatarLink as HTMLElement).style.marginLeft = 'auto';
             topRow.appendChild(avatarLink);
           }
-
-          // Build info column
           infoCol.appendChild(topRow);
           if (postdate) infoCol.appendChild(postdate);
-
-          // Build main row
           row.appendChild(badgeCol);
           row.appendChild(infoCol);
           posthead.appendChild(row);
         }
       } else {
-        authorLink.parentNode?.insertBefore(badge, authorLink);
+      post.style.background = bgColor;
+      const postTable = post.querySelector<HTMLElement>('table[id^="post"]');
+      if (postTable) {
+        postTable.style.border = '4px solid #FF6B35';
+        postTable.style.borderRadius = '8px';
+        postTable.style.boxShadow = '0 2px 12px rgba(255,107,53,0.25)';
+        postTable.querySelectorAll('td, th').forEach(el => {
+          (el as HTMLElement).style.setProperty('background-color', bgColor, 'important');
+        });
       }
+
+      const firstAuthorLink = post.querySelector<HTMLAnchorElement>('a[href*="member.php?u="], a.bigusername[href*="member.php"]');
+      if (firstAuthorLink) {
+        const badge = document.createElement('span');
+        badge.className = 'fc-op-badge';
+        badge.textContent = '\uD83D\uDCCC OP';
+        badge.style.cssText = 'display:inline-block;background:#FF6B35;color:white;font-size:11px;font-weight:bold;padding:2px 8px;border-radius:4px;margin-right:8px;line-height:1.5;';
+        firstAuthorLink.parentNode?.insertBefore(badge, firstAuthorLink);
+      }
+      }
+    } else {
+    let target: HTMLElement = post;
+    if (post.classList.contains('postbit_wrapper')) {
+      const innerUl = post.querySelector('ul');
+      if (innerUl) {
+        target = innerUl;
+        innerUl.querySelectorAll('[style*="background-color"]').forEach(el => {
+          if (el !== innerUl) (el as HTMLElement).style.setProperty('background-color', 'transparent', 'important');
+        });
+      }
+    } else if (ad.theme === 'desktop-v2') {
+      const section = post.querySelector<HTMLElement>('section');
+      if (section) target = section;
+    }
+    target.style.setProperty('background', bgColor, 'important');
+    target.style.setProperty('border', '4px solid #FF6B35', 'important');
+    target.style.setProperty('border-radius', '8px', 'important');
+    target.style.setProperty('box-shadow', '0 2px 12px rgba(255,107,53,0.25)', 'important');
+
+    const firstAuthorLink = post.querySelector<HTMLAnchorElement>('a[href*="member.php?u="], a.bigusername[href*="member.php"]');
+    if (firstAuthorLink) {
+      const badge = document.createElement('span');
+      badge.className = 'fc-op-badge';
+      badge.textContent = '\uD83D\uDCCC OP';
+      badge.style.cssText = 'display:inline-block;background:#FF6B35;color:white;font-size:11px;font-weight:bold;padding:2px 8px;border-radius:4px;margin-right:8px;line-height:1.5;';
+      firstAuthorLink.parentNode?.insertBefore(badge, firstAuthorLink);
+    }
     }
   });
 }
