@@ -72,9 +72,9 @@ export function togglePanel(): void {
   const tabWords = document.createElement('div'); tabWords.textContent = 'Palabras';
   tabWords.style.cssText = STYLE.TAB_INACTIVE;
   const tabHighlight = document.createElement('div'); tabHighlight.textContent = 'Resaltado';
-  tabHighlight.style.cssText = 'width:55px;text-align:center;padding:6px 2px;cursor:pointer;font-size:13px;color:#999;';
+  tabHighlight.style.cssText = STYLE.TAB_INACTIVE;
   const tabConfig = document.createElement('div'); tabConfig.textContent = 'Config';
-  tabConfig.style.cssText = 'width:45px;text-align:center;padding:6px 2px;cursor:pointer;font-size:13px;color:#999;';
+  tabConfig.style.cssText = STYLE.TAB_INACTIVE;
 
   tabBar.appendChild(tabUsers);
   tabBar.appendChild(tabWords);
@@ -88,8 +88,8 @@ export function togglePanel(): void {
   function resetTabs(): void {
     tabUsers.style.cssText = STYLE.TAB_INACTIVE;
     tabWords.style.cssText = STYLE.TAB_INACTIVE;
-    tabHighlight.style.cssText = 'width:55px;text-align:center;padding:6px 2px;cursor:pointer;font-size:13px;color:#999;';
-    tabConfig.style.cssText = 'width:45px;text-align:center;padding:6px 2px;cursor:pointer;font-size:13px;color:#999;';
+    tabHighlight.style.cssText = STYLE.TAB_INACTIVE;
+    tabConfig.style.cssText = STYLE.TAB_INACTIVE;
   }
 
   tabUsers.addEventListener('click', () => {
@@ -104,12 +104,12 @@ export function togglePanel(): void {
   });
   tabHighlight.addEventListener('click', () => {
     log('PANEL', 'Tab: Resaltar'); resetTabs();
-    tabHighlight.style.cssText = 'width:55px;text-align:center;padding:6px 2px;cursor:pointer;font-size:13px;font-weight:bold;color:#FD5D4D;';
+    tabHighlight.style.cssText = STYLE.TAB_ACTIVE;
     if (content) buildHighlightTab(content);
   });
   tabConfig.addEventListener('click', () => {
     log('PANEL', 'Tab: Config'); resetTabs();
-    tabConfig.style.cssText = 'width:45px;text-align:center;padding:6px 2px;cursor:pointer;font-size:13px;font-weight:bold;color:#FD5D4D;';
+    tabConfig.style.cssText = STYLE.TAB_ACTIVE;
     if (content) buildConfigTab(content);
   });
   panel.appendChild(tabBar);

@@ -224,7 +224,7 @@ export function highlightOPPosts(): void {
           const badgeCol = document.createElement('span');
           badgeCol.className = 'fc-op-badge';
           badgeCol.textContent = '\uD83D\uDCCC OP';
-          badgeCol.style.cssText = 'display:flex;align-items:center;background:#FF6B35;color:white;font-size:10px;font-weight:bold;padding:2px 5px;border-radius:3px;flex-shrink:0;margin-bottom:4px;';
+          badgeCol.style.cssText = 'display:flex;align-items:center;background:#FF6B35;color:white;font-size:10px;font-weight:bold;padding:2px 5px;border-radius:3px;flex-shrink:2;margin-bottom:12px;margin-top:12px;margin-left:2px;';
           const infoCol = document.createElement('div');
           infoCol.style.cssText = 'display:flex;flex-direction:column;flex:1;';
           const topRow = document.createElement('div');
@@ -239,7 +239,10 @@ export function highlightOPPosts(): void {
             topRow.appendChild(avatarLink);
           }
           infoCol.appendChild(topRow);
-          if (postdate) infoCol.appendChild(postdate);
+          if (postdate) {
+            infoCol.appendChild(postdate);
+            (postdate as HTMLElement).style.marginTop = '-2px';
+          }
           row.appendChild(badgeCol);
           row.appendChild(infoCol);
           posthead.appendChild(row);
@@ -261,7 +264,7 @@ export function highlightOPPosts(): void {
         const badge = document.createElement('span');
         badge.className = 'fc-op-badge';
         badge.textContent = '\uD83D\uDCCC OP';
-        badge.style.cssText = 'display:inline-block;background:#FF6B35;color:white;font-size:11px;font-weight:bold;padding:2px 8px;border-radius:4px;margin-right:8px;line-height:1.5;';
+badge.style.cssText = `display:inline-block;background:#FF6B35;color:white;font-size:11px;font-weight:bold;padding:${ad.theme === 'mobile-v2' ? '8px' : '2px'} 8px;border-radius:4px;margin-right:8px;line-height:1.5;`;
         firstAuthorLink.parentNode?.insertBefore(badge, firstAuthorLink);
       }
       }
@@ -274,6 +277,11 @@ export function highlightOPPosts(): void {
         innerUl.querySelectorAll('[style*="background-color"]').forEach(el => {
           if (el !== innerUl) (el as HTMLElement).style.setProperty('background-color', 'transparent', 'important');
         });
+        const borderDiv = innerUl.querySelector<HTMLElement>('div[style*="border-left"]');
+        if (borderDiv) borderDiv.style.borderLeft = 'none';
+        innerUl.querySelectorAll('.quote').forEach(el => {
+          (el as HTMLElement).style.background = '#fff';
+        });
       }
     } else if (ad.theme === 'desktop-v1') {
       const postTable = post.querySelector<HTMLElement>('table[id^="post"]');
@@ -284,6 +292,14 @@ export function highlightOPPosts(): void {
           (el as HTMLElement).style.setProperty('background-color', bgColor, 'important');
           (el as HTMLElement).style.setProperty('background-image', 'none', 'important');
         });
+        const quoteDiv = postTable.querySelector<HTMLElement>('div[style*="margin:20px"]');
+        if (quoteDiv) {
+          quoteDiv.style.borderRadius = '8px';
+          quoteDiv.style.border = '1px solid black';
+          quoteDiv.style.background = '#fff';
+          const innerQuote = quoteDiv.querySelector<HTMLElement>('td.alt2');
+          if (innerQuote) innerQuote.style.background = '#fff';
+        }
         let next = postTable.nextElementSibling;
         while (next) {
           (next as HTMLElement).style.display = 'none';
@@ -292,7 +308,12 @@ export function highlightOPPosts(): void {
       }
     } else if (ad.theme === 'desktop-v2') {
       const section = post.querySelector<HTMLElement>('section');
-      if (section) target = section;
+      if (section) {
+        target = section;
+        section.querySelectorAll('.quote').forEach(el => {
+          (el as HTMLElement).style.background = '#fff';
+        });
+      }
     }
     target.style.setProperty('box-sizing', 'border-box', 'important');
     target.style.setProperty('background', bgColor, 'important');
