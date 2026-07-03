@@ -91,6 +91,14 @@ function removeCustomPromos(): void {
         if (ul.children.length === 0) ul.remove();
         break;
       }
+      if (el.tagName === 'TABLE' && el.classList.contains('cajasprin')) {
+        const prev = el.previousElementSibling;
+        if (prev && prev.tagName === 'BR') prev.remove();
+        const next = el.nextElementSibling;
+        if (next && next.tagName === 'BR') next.remove();
+        el.remove();
+        break;
+      }
       el = el.parentElement;
     }
   }
