@@ -206,9 +206,11 @@ export function highlightOPPosts(): void {
           document.head.appendChild(s);
         }
         parentUl.classList.add('fc-op-highlight');
-        parentUl.style.setProperty('border-width', '1px', 'important');
+        parentUl.style.setProperty('border-width', '0px', 'important');
+        parentUl.style.setProperty('padding', '1px', 'important');
         parentUl.style.setProperty('border-color', '#FF6B35', 'important');
-        parentUl.style.setProperty('border-radius', '8px', 'important');
+        parentUl.style.setProperty('border-radius', '10px', 'important');
+        parentUl.style.setProperty('overflow', 'hidden', 'important');
 
         if (linkRow) {
           linkRow.style.setProperty('background-color', bgColor, 'important');
