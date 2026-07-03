@@ -16,34 +16,34 @@
 - Por **autor** (solo diseño Nuevo, no Clásico)
 - Muestra resumen de hilos ocultados con enlaces y motivo
 
-![](images/foro/hilos-ocultos.png)
+![](images/features/hilos-ocultos.png)
 
 ### Resaltar hilos sin respuestas
 - Marca los hilos con 0 mensajes con un color de fondo configurable (selector de color incluido)
 
-![](images/foro/hilo-resaltado.png)
+![](images/features/hilo-resaltado.png)
 
 ### Ocultar mensajes
 - Oculta mensajes de usuarios ignorados automaticamente
 - Opcion de mostrar placeholder "Mensaje de usuario ignorado" en lugar de ocultar completamente
 - Opcion de desactivar la ocultación de mensajes por completo
 
-![](images/foro/usuario-ignorado.png)
+![](images/features/usuario-ignorado.png)
 
 ### Botones "Ignorar" en cada mensaje
 - Se inyecta un enlace **Ignorar** junto a los botones "Citar", responder y denunciar.
 - Añade al usuario a la lista local **y** a la lista de ignorados de Forocoches
 - Oculta el post al instante
 
-![](images/foro/ignorar.png)
+![](images/features/ignorar.png)
 
 ### Notas de usuarios
 - Añade una **nota privada** a cualquier usuario desde sus mensajes (icono ✏️/📝 junto a "Denunciar")
 - La nota se guarda en localStorage y se muestra en el **perfil del usuario** (`member.php`)
 - Desde el perfil puedes ver, editar o eliminar la nota
 
-![](images/foro/notas.png)
-![](images/foro/notas2.png)
+![](images/features/notas.png)
+![](images/features/notas2.png)
 
 ### Botón Pole (🏎️)
 - Busca automaticamente el primer hilo sin respuestas en la pagina actual
@@ -59,8 +59,8 @@
   - **Config**: varias opciones de configuracion + exportar/importar
   - **Logs**: registro de depuracion con botones Limpiar/Copiar
 
-![](images/foro/usuarios.png)
-![](images/foro/palabras.png)
+![](images/features/usuarios.png)
+![](images/features/palabras.png)
 
 ### Botones flotantes extra
 - ▲ **Subir arriba** — scroll suave al inicio
@@ -87,8 +87,8 @@
 - Exporta configuracion y listas de palabras a archivo JSON
 - Importa desde JSON para restaurar datos
 
-![](images/foro/config.png)
-![](images/foro/config2.png)
+![](images/features/config.png)
+![](images/features/config2.png)
 
 ### Deteccion de navegacion
 - History API monkey-patched (`pushState`/`replaceState`) + evento `popstate` para navegacion SPA
