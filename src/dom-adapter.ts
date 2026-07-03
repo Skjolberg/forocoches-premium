@@ -25,6 +25,8 @@ function detectTheme(): Theme {
   if (document.querySelector('table#threadslist')) return 'desktop-v1';
   // mobile-v2: div.threads-list (forumdisplay) or postbit_wrapper (showthread)
   if (document.querySelector('div.threads-list, div.postbit_wrapper')) return 'mobile-v2';
+  // desktop-v1 showthread (vBulletin post table, no threadlist)
+  if (document.querySelector('table[id^="post"]')) return 'desktop-v1';
   // mobile-v1 fallback
   return 'mobile-v1';
 }

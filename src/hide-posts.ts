@@ -198,9 +198,17 @@ export function highlightOPPosts(): void {
         post.style.setProperty('background-color', bgColor, 'important');
         post.style.setProperty('background-image', 'none', 'important');
 
-        parentUl.style.setProperty('border', '4px solid #FF6B35', 'important');
+        const styleId = 'fcp-op-highlight-style';
+        if (!document.getElementById(styleId)) {
+          const s = document.createElement('style');
+          s.id = styleId;
+          s.textContent = '.fc-op-highlight{position:relative!important}.fc-op-highlight::before{content:"";position:absolute;inset:0;box-shadow:inset 0 0 0 4px #FF6B35,0 2px 8px rgba(255,107,53,0.3);border-radius:inherit;pointer-events:none;z-index:2}';
+          document.head.appendChild(s);
+        }
+        parentUl.classList.add('fc-op-highlight');
+        parentUl.style.setProperty('border-width', '1px', 'important');
+        parentUl.style.setProperty('border-color', '#FF6B35', 'important');
         parentUl.style.setProperty('border-radius', '8px', 'important');
-        parentUl.style.setProperty('box-shadow', '0 2px 8px rgba(255,107,53,0.3)', 'important');
 
         if (linkRow) {
           linkRow.style.setProperty('background-color', bgColor, 'important');
@@ -265,10 +273,26 @@ export function highlightOPPosts(): void {
           if (el !== innerUl) (el as HTMLElement).style.setProperty('background-color', 'transparent', 'important');
         });
       }
+    } else if (ad.theme === 'desktop-v1') {
+      const postTable = post.querySelector<HTMLElement>('table[id^="post"]');
+      if (postTable) {
+        post.style.setProperty('background', 'transparent', 'important');
+        target = postTable;
+        postTable.querySelectorAll('td, th').forEach(el => {
+          (el as HTMLElement).style.setProperty('background-color', bgColor, 'important');
+          (el as HTMLElement).style.setProperty('background-image', 'none', 'important');
+        });
+        let next = postTable.nextElementSibling;
+        while (next) {
+          (next as HTMLElement).style.display = 'none';
+          next = next.nextElementSibling;
+        }
+      }
     } else if (ad.theme === 'desktop-v2') {
       const section = post.querySelector<HTMLElement>('section');
       if (section) target = section;
     }
+    target.style.setProperty('box-sizing', 'border-box', 'important');
     target.style.setProperty('background', bgColor, 'important');
     target.style.setProperty('border', '4px solid #FF6B35', 'important');
     target.style.setProperty('border-radius', '8px', 'important');
