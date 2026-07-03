@@ -13,7 +13,7 @@
 
 ### Ocultar hilos
 - Por **palabras clave** en el titulo (sin acentos, insensitive)
-- Por **autor** (solo diseño Nuevo, no Clásico)
+- Por **autor** (solo Desktop-v2, no Desktop-v1)
 - Muestra resumen de hilos ocultados con enlaces y motivo
 
 ![](images/features/hilos-ocultos.png)
@@ -22,6 +22,14 @@
 - Marca los hilos con 0 mensajes con un color de fondo configurable (selector de color incluido)
 
 ![](images/features/hilo-resaltado.png)
+
+### Resaltar mensajes del OP
+- Marca los mensajes del autor del hilo (OP) con un color de fondo y un borde distintivo
+- Incluye etiqueta **📌 OP** para identificar rapidamente al creador del hilo
+- Compatible con los 4 diseños
+- Color configurable desde el panel
+
+![](images/features/op.png)
 
 ### Ocultar mensajes
 - Oculta mensajes de usuarios ignorados automaticamente
@@ -72,7 +80,7 @@
 - Elimina avisos, noticias promocionadas y barra de cookies (`#infocookie`, `#vbnotices`)
 - Elimina contenedores vacíos y placeholders de anuncios que distraen
 - Elimina el botón nativo de "subir" para no duplicar funcionalidad
-- Funciona en **todos los diseños**: móvil clásico, móvil nuevo, PC clásico y PC nuevo
+- Funciona en **todos los diseños**: Mobile-v1 (móvil antiguo), Mobile-v2 (móvil nuevo), Desktop-v1 (PC antiguo) y Desktop-v2 (PC nuevo)
 - Configurable desde el panel (activar/desactivar por separado publicidad y avisos)
 
 ### Integracion con Forocoches real
@@ -80,7 +88,7 @@
 - Anade/elimina usuarios directamente
 
 ### Soporte multiplataforma
-- **4 diseños** detectados automáticamente: móvil clásico, móvil nuevo, PC clásico y PC nuevo
+- **4 diseños** detectados automáticamente: Mobile-v1 (móvil antiguo), Mobile-v2 (móvil nuevo), Desktop-v1 (PC antiguo) y Desktop-v2 (PC nuevo)
 - Adaptadores especificos para cada diseño (post containers, selectores, extraccion de datos)
 
 ### Exportar / Importar configuracion

@@ -8,7 +8,7 @@ import { resetAdapter } from './dom-adapter';
 
 declare const __FC_VERSION__: string;
 const FCVERSION = __FC_VERSION__;
-const FCAUTHOR = 'IsiPalazon';
+const FCAUTHOR = 'skjolberg';
 const TELEGRAM = '@x265Always';
 
 let lastUrl = window.location.href;
