@@ -45,7 +45,7 @@ export const STYLE = {
   BTN_DEL_ALL: 'border:none;background:#c00;color:white;border-radius:5px;padding:8px 16px;cursor:pointer;font-size:12px;font-weight:bold;margin-top:8px;display:block;width:100%;',
 
   // Panel
-  PANEL: 'position:fixed;bottom:72px;right:20px;width:280px;max-height:420px;background:white;border-radius:10px;box-shadow:0 4px 16px rgba(0,0,0,0.25);z-index:999999;padding:14px;font-family:Helvetica,Arial,sans-serif;color:#333;overflow:hidden;display:flex;flex-direction:column;',
+  PANEL: 'position:fixed;bottom:72px;right:20px;width:280px;max-height:420px;background:white;border-radius:10px;box-shadow:0 4px 16px rgba(0,0,0,0.25);z-index:999999;padding:14px;font-family:Helvetica,Arial,sans-serif;color:#333;overflow:hidden;display:flex;flex-direction:column;text-align:left;',
   PANEL_CONTENT: 'flex:1;overflow-y:auto;min-height:200px;max-height:300px;',
   TAB_BAR: 'display:flex;margin-bottom:10px;border-bottom:2px solid #eee;gap:4px;',
   TAB_ACTIVE: 'flex:1;text-align:center;padding:6px;cursor:pointer;font-size:13px;font-weight:bold;color:#FD5D4D;border-bottom:2px solid #FD5D4D;margin-bottom:-2px;',
