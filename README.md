@@ -23,6 +23,14 @@
 
 ![](images/features/hilo-resaltado.png)
 
+### Grupos de resaltado
+- Crea **grupos de usuarios** para resaltar todos los hilos de ciertos autores con un color personalizado
+- Crea **grupos de palabras** para resaltar hilos cuyo título contenga ciertas palabras clave
+- Cada grupo tiene su propio color y descripción
+- Prioridad configurable sobre el ocultado: si un hilo coincide con un grupo de resaltado, no se oculta aunque cumpla criterios de ocultado
+
+![](images/features/resaltado.png)
+
 ### Resaltar mensajes del OP
 - Marca los mensajes del autor del hilo (OP) con un color de fondo y un borde distintivo
 - Incluye etiqueta **📌 OP** para identificar rapidamente al creador del hilo
